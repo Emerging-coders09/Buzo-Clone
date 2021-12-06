@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/videos"
+        android:icon="@drawable/ic_baseline_videocam_24"
+        android:title="My Videos">
+
+    </item>
+
+    <item
+        android:id="@+id/favourites"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
+        android:title="Favourites">
+
+    </item>
+
+    <item
+        android:id="@+id/sound"
+        android:icon="@drawable/ic_baseline_music_note_24"
+        android:title="Tap Sound">
+
+    </item>
+
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="Share App">
+
+    </item>
+
+    <item
+        android:id="@+id/rate"
+        android:icon="@drawable/ic_baseline_star_rate_24"
+        android:title="Rate App">
+
+    </item>
+
+    <item
+        android:id="@+id/privacy"
+        android:icon="@drawable/ic_baseline_privacy_tip_24"
+        android:title="Privacy Policy">
+
+    </item>
+
+</menu>
