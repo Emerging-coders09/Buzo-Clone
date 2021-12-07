@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.R;
-import com.devarshi.buzoclone.StatusViewer;
+import com.devarshi.buzoclone.StatusViewerActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,28 +20,28 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> {
+public class ListAdapterStatus extends RecyclerView.Adapter<ListAdapterStatus.StatusViewHolder> {
 
     final Context context;
-    final ArrayList<File> modelFeedArrayList;
+    final ArrayList<File> modelFeedArrayListStatus;
 
-    public ListAdapter(Context context, final ArrayList<File> modelFeedArrayList) {
+    public ListAdapterStatus(Context context, final ArrayList<File> modelFeedArrayList) {
 
         this.context = context;
-        this.modelFeedArrayList = modelFeedArrayList;
+        this.modelFeedArrayListStatus = modelFeedArrayList;
     }
 
     @NotNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_saver_media_row_item, parent, false);
-        return new MyViewHolder(view);
+    public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_downloader_media_row_item, parent, false);
+        return new StatusViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull StatusViewHolder holder, int position) {
 
-        File currentFile = modelFeedArrayList.get(position);
+        File currentFile = modelFeedArrayListStatus.get(position);
 
         String filePath = currentFile.toString();
 
@@ -92,8 +92,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, StatusViewer.class);
-                intent.putExtra("modelFeedArrayList", modelFeedArrayList);
+                Intent intent = new Intent(context, StatusViewerActivity.class);
+                intent.putExtra("modelFeedArrayListStatus", modelFeedArrayListStatus);
                 intent.putExtra("position",position);
                 context.startActivity(intent);
             }
@@ -103,7 +103,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return modelFeedArrayList.size();
+        return modelFeedArrayListStatus.size();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
         return position;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class StatusViewHolder extends RecyclerView.ViewHolder {
 
         RoundedImageView imageView;
         ImageView playImageView;
@@ -124,7 +124,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
         /*VideoView videoView;
         CardView cardViewVideo;*/
 
-        public MyViewHolder(@NonNull @NotNull View itemView) {
+        public StatusViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.imageViewStatus);

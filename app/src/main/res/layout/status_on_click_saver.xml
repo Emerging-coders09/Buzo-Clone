@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerViewWhatsAppVideo"
+        android:id="@+id/playerViewWav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:controller_layout_id="@layout/exo_playback_control_view_yt"
@@ -19,7 +18,7 @@
     </com.google.android.exoplayer2.ui.PlayerView>
 
     <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/statusImageView"
+        android:id="@+id/statusIv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
@@ -31,7 +30,7 @@
     </com.github.chrisbanes.photoview.PhotoView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutDownload"
+        android:id="@+id/constraintLayoutDel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -40,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/downloadCircle1"
+            android:id="@+id/deleteCircleIv1"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:src="@drawable/image_view_border"
@@ -52,39 +51,28 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageViewDownload"
+            android:id="@+id/imageViewDel"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_baseline_arrow_downward_64"
-            app:layout_constraintBottom_toBottomOf="@+id/downloadCircle1"
+            android:src="@drawable/ic_baseline_delete_24"
+            app:layout_constraintBottom_toBottomOf="@+id/deleteCircleIv1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/downloadCircle1"
-            app:layout_constraintTop_toTopOf="@+id/downloadCircle1" />
-
-        <ImageView
-            android:id="@+id/imageViewDownloadComplete"
-            android:visibility="gone"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_baseline_done_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/downloadCircle1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/deleteCircleIv1"
+            app:layout_constraintTop_toTopOf="@+id/deleteCircleIv1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutShare"
+        android:id="@+id/constraintLayoutSh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutDownload"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutDel"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/shareCircle"
+            android:id="@+id/shareCircleIv2"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:src="@drawable/image_view_border"
@@ -96,28 +84,28 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageViewShare"
+            android:id="@+id/imageViewSh"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/ic_baseline_share_64"
-            app:layout_constraintBottom_toBottomOf="@+id/shareCircle"
-            app:layout_constraintEnd_toEndOf="@+id/shareCircle"
-            app:layout_constraintStart_toStartOf="@+id/shareCircle"
-            app:layout_constraintTop_toTopOf="@+id/shareCircle" />
+            app:layout_constraintBottom_toBottomOf="@+id/shareCircleIv2"
+            app:layout_constraintEnd_toEndOf="@+id/shareCircleIv2"
+            app:layout_constraintStart_toStartOf="@+id/shareCircleIv2"
+            app:layout_constraintTop_toTopOf="@+id/shareCircleIv2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutSendTo"
+        android:id="@+id/constraintLayoutSt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutShare"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayoutSh"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/sendToCircle"
+            android:id="@+id/sendTc"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:src="@drawable/image_view_border"
@@ -129,20 +117,20 @@
         </ImageView>
 
         <ImageView
-            android:id="@+id/imageViewSendTo"
+            android:id="@+id/imageViewSt"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/ic_baseline_sync_alt_64"
-            app:layout_constraintBottom_toBottomOf="@+id/sendToCircle"
-            app:layout_constraintEnd_toEndOf="@+id/sendToCircle"
-            app:layout_constraintStart_toStartOf="@+id/sendToCircle"
-            app:layout_constraintTop_toTopOf="@+id/sendToCircle"/>
+            app:layout_constraintBottom_toBottomOf="@+id/sendTc"
+            app:layout_constraintEnd_toEndOf="@+id/sendTc"
+            app:layout_constraintStart_toStartOf="@+id/sendTc"
+            app:layout_constraintTop_toTopOf="@+id/sendTc"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ImageView
-        android:id="@+id/imageViewB"
+        android:id="@+id/imageViewBs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -151,38 +139,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
-
-    <!--<ImageView
-        android:id="@+id/imageViewReplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_replay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ImageView
-        android:id="@+id/exoPlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_thumbnail_play"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/playerViewWhatsAppVideo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/playerViewWhatsAppVideo" />
-
-    <ImageView
-        android:id="@+id/exoPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_pause_64"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/playerViewWhatsAppVideo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,73 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="10dp"
-    tools:context=".StatusSaver">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StatusSaverActivity"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+    <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/viewPagerSs"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
 
-        <ImageView
-            android:id="@+id/backToWhatsAppCardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_baseline_keyboard_backspace_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/groovedpersonaluseregular"
-            android:text="Status Downloader"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backToWhatsAppCardView"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </TextView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabTextColor="@color/black"
-        app:tabSelectedTextColor="@color/black"
-        app:tabIndicator="@color/white"
-        android:layout_marginTop="10dp">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItemStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItemSaved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Saved"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/viewPager">
-
-    </androidx.viewpager.widget.ViewPager>
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</LinearLayout>

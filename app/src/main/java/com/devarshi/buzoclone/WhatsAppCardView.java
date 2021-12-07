@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devarshi.Adapter.statusAdapter;
+import com.devarshi.Adapter.StatusCardViewAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         statusRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
-        statusAdapter statusRecyclerAdapter = new statusAdapter(this,this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
+        StatusCardViewAdapter statusRecyclerAdapter = new StatusCardViewAdapter(this,this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
         statusRecyclerView.setAdapter(statusRecyclerAdapter);
 
         textViewSeeAll.setOnClickListener(v -> {
@@ -64,7 +64,7 @@ public class WhatsAppCardView extends AppCompatActivity {
                 ActivityCompat.requestPermissions(WhatsAppCardView.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                         READ_STORAGE_PERMISSION_REQUEST_CODE);
             } else {
-                Intent intent = new Intent(getApplicationContext(), StatusSaver.class);
+                Intent intent = new Intent(getApplicationContext(), StatusDownloader.class);
                 startActivity(intent);
             }
     });

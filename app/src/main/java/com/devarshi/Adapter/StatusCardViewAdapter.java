@@ -13,19 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.R;
-import com.devarshi.buzoclone.StatusViewer;
+import com.devarshi.buzoclone.StatusViewerActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class statusAdapter extends RecyclerView.Adapter<statusAdapter.StatusViewHolder> {
+public class StatusCardViewAdapter extends RecyclerView.Adapter<StatusCardViewAdapter.StatusViewHolder> {
 
     final Context context;
     final ArrayList<File> modelFeedArrayList;
 
-    public statusAdapter(Context context, final ArrayList<File> modelFeedArrayList) {
+    public StatusCardViewAdapter(Context context, final ArrayList<File> modelFeedArrayList) {
 
         this.context = context;
         this.modelFeedArrayList = modelFeedArrayList;
@@ -65,8 +65,8 @@ public class statusAdapter extends RecyclerView.Adapter<statusAdapter.StatusView
         }
 
         holder.cardViewIt.setOnClickListener(v -> {
-            Intent intent = new Intent(context.getApplicationContext(), StatusViewer.class);
-            intent.putExtra("modelFeedArrayList", modelFeedArrayList);
+            Intent intent = new Intent(context.getApplicationContext(), StatusViewerActivity.class);
+            intent.putExtra("modelFeedArrayListStatus", modelFeedArrayList);
             intent.putExtra("position",position);
             context.startActivity(intent);
         });

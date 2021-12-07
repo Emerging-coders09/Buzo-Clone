@@ -8,19 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.devarshi.Adapter.ImageSlideAdapter;
+import com.devarshi.Adapter.StatusViewerImageSlideAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class StatusViewer extends AppCompatActivity implements ImageSlideAdapter.OnPagerItemSelected {
+public class StatusViewerActivity extends AppCompatActivity implements StatusViewerImageSlideAdapter.OnPagerItemSelected {
 
-    ViewPager2 viewPager;
-    ArrayList<File> modelFeedArrayList;
+    ViewPager2 viewPagerViewer;
+    ArrayList<File> modelFeedArrayListStatusViewer;
     int position;
-    private int startPosition = 0;
-    public int currentPage = 0;
-    ImageSlideAdapter.SlidingViewHolder slidingViewHolder;
+    StatusViewerImageSlideAdapter.StatusViewerSlidingViewHolder slidingViewHolderStatusViewer;
 
     final ExoPlayerManager exoPlayerManager = new ExoPlayerManager(this);
 
@@ -33,26 +31,26 @@ public class StatusViewer extends AppCompatActivity implements ImageSlideAdapter
 
         setContentView(R.layout.activity_status_viewer);
 
-        viewPager = findViewById(R.id.viewPager);
+        viewPagerViewer = findViewById(R.id.viewPagerSv);
 
         Intent intent = getIntent();
 
-        modelFeedArrayList = (ArrayList<File>) getIntent().getSerializableExtra("modelFeedArrayList");
+        modelFeedArrayListStatusViewer = (ArrayList<File>) getIntent().getSerializableExtra("modelFeedArrayListStatus");
         position = intent.getIntExtra("position", 0);
-        ImageSlideAdapter imageSlideAdapter = new ImageSlideAdapter(this, modelFeedArrayList, position, this);
-        viewPager.setAdapter(imageSlideAdapter);
-        viewPager.setCurrentItem(position,false);
-        viewPager.setOffscreenPageLimit(1);
+        StatusViewerImageSlideAdapter statusImageSlideAdapter = new StatusViewerImageSlideAdapter(this, modelFeedArrayListStatusViewer, position, this);
+        viewPagerViewer.setAdapter(statusImageSlideAdapter);
+        viewPagerViewer.setCurrentItem(position,false);
+        viewPagerViewer.setOffscreenPageLimit(1);
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        viewPagerViewer.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int p, float positionOffset, int positionOffsetPixels) {
                 exoPlayerManager.releaseVideo();
 
-                RecyclerView rv = (RecyclerView) viewPager.getChildAt(0);
-                slidingViewHolder = (ImageSlideAdapter.SlidingViewHolder) rv.findViewHolderForAdapterPosition(p);
+                RecyclerView rv = (RecyclerView) viewPagerViewer.getChildAt(0);
+                slidingViewHolderStatusViewer = (StatusViewerImageSlideAdapter.StatusViewerSlidingViewHolder) rv.findViewHolderForAdapterPosition(p);
 
-                File currentFile = modelFeedArrayList.get(p);
+                File currentFile = modelFeedArrayListStatusViewer.get(p);
                 String filePath = currentFile.toString();
 
                 if (filePath.endsWith(".mp4")) {
@@ -64,7 +62,7 @@ public class StatusViewer extends AppCompatActivity implements ImageSlideAdapter
 
                         @Override
                         public void onInitialized() {
-                            slidingViewHolder.playerView.setPlayer(exoPlayerManager.exoPlayer);
+                            slidingViewHolderStatusViewer.playerView.setPlayer(exoPlayerManager.exoPlayer);
                             exoPlayerManager.playVideo();
                         }
                     });

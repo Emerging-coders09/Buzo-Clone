@@ -13,20 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.devarshi.Adapter.ListAdapter;
+import com.devarshi.Adapter.ListAdapterStatus;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class StatusFragment extends Fragment {
+public class StatusViewerFragment extends Fragment {
 
     String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT == 29 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshStatus;
 
-    public StatusFragment() {
+    public StatusViewerFragment() {
         // Required empty public constructor
 
     }
@@ -37,8 +37,8 @@ public class StatusFragment extends Fragment {
 
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_status, container, false);
-        mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMedia);
+        View view = inflater.inflate(R.layout.fragment_status_viewer, container, false);
+        mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMediaStatus);
 
         swipeRefreshStatus = view.findViewById(R.id.swipeRefreshStatus);
 
@@ -47,16 +47,15 @@ public class StatusFragment extends Fragment {
             public void onRefresh() {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-                ListAdapter recyclerViewMediaAdapter = new ListAdapter(getActivity(),StatusFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
+                ListAdapterStatus recyclerViewMediaAdapter = new ListAdapterStatus(getActivity(), StatusViewerFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
                 mRecyclerViewMediaList.setAdapter(recyclerViewMediaAdapter);
                 swipeRefreshStatus.setRefreshing(false);
             }
         });
 
-
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-        ListAdapter recyclerViewMediaAdapter = new ListAdapter(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
+        ListAdapterStatus recyclerViewMediaAdapter = new ListAdapterStatus(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
         mRecyclerViewMediaList.setAdapter(recyclerViewMediaAdapter);
         return view;
     }

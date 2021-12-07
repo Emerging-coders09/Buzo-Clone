@@ -12,7 +12,7 @@ import com.devarshi.Adapter.FragmentAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
-public class StatusSaver extends AppCompatActivity {
+public class StatusDownloader extends AppCompatActivity {
 
     TabLayout tabLayout;
     TabItem statusTabItem, savedTabItem;
@@ -25,7 +25,7 @@ public class StatusSaver extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_status_saver);
+        setContentView(R.layout.activity_status_downloader);
 
         tabLayout = findViewById(R.id.tabLayout);
         statusTabItem = findViewById(R.id.tabItemStatus);
