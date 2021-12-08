@@ -34,7 +34,7 @@ public class ListAdapterStatus extends RecyclerView.Adapter<ListAdapterStatus.St
     @NotNull
     @Override
     public StatusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_downloader_media_row_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_viewer_media_row_item, parent, false);
         return new StatusViewHolder(view);
     }
 
@@ -127,8 +127,8 @@ public class ListAdapterStatus extends RecyclerView.Adapter<ListAdapterStatus.St
         public StatusViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
-            imageView = itemView.findViewById(R.id.imageViewStatus);
-            playImageView = itemView.findViewById(R.id.playImageView);
+            imageView = itemView.findViewById(R.id.imageViewViewer);
+            playImageView = itemView.findViewById(R.id.playImageViewSv);
 //            imageViewThumbnail = itemView.findViewById(R.id.imageViewThumbnail);
 //            videoViewStatus = itemView.findViewById(R.id.videoViewStatus);
 //            iVThumbnail = itemView.findViewById(R.id.imageViewThumbnail);

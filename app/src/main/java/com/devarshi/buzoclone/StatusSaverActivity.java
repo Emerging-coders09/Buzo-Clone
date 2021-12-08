@@ -34,7 +34,7 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
         modelFeedArrayListStatusSaver = (ArrayList<File>) getIntent().getSerializableExtra("modelFeedArrayListSaved");
         position = intent.getIntExtra("position",0);
 
-        StatusSaverImageSlideAdapter saverImageSlideAdapter = new StatusSaverImageSlideAdapter(this,modelFeedArrayListStatusSaver,position,this);
+        StatusSaverImageSlideAdapter saverImageSlideAdapter = new StatusSaverImageSlideAdapter(StatusSaverActivity.this,modelFeedArrayListStatusSaver,position,this);
         viewPagerSaver.setAdapter(saverImageSlideAdapter);
         viewPagerSaver.setCurrentItem(position,false);
         viewPagerSaver.setOffscreenPageLimit(1);

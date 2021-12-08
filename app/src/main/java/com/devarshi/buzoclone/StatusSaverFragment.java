@@ -19,13 +19,16 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SavedFragment extends Fragment {
+public class StatusSaverFragment extends Fragment {
 
     String SAVED_FILES_LOCATION = "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker";
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshLayoutSaved;
+    public ListAdapterSaved listAdapterSaved;
 
-    public SavedFragment() {
+    private static final String TAG = "StatusSaverFragment";
+
+    public StatusSaverFragment() {
         // Required empty public constructor
     }
 
@@ -44,7 +47,7 @@ public class SavedFragment extends Fragment {
             public void onRefresh() {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-                ListAdapterSaved listAdapterSaved = new ListAdapterSaved(getActivity(),SavedFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
+                listAdapterSaved = new ListAdapterSaved(getActivity(), StatusSaverFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
                 mRecyclerViewMediaList.setAdapter(listAdapterSaved);
                 swipeRefreshLayoutSaved.setRefreshing(false);
             }
@@ -52,7 +55,7 @@ public class SavedFragment extends Fragment {
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-        ListAdapterSaved listAdapterSaved = new ListAdapterSaved(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
+        listAdapterSaved = new ListAdapterSaved(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
         mRecyclerViewMediaList.setAdapter(listAdapterSaved);
 
         return view;

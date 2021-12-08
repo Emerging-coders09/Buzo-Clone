@@ -25,10 +25,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devarshi.buzoclone.BuildConfig;
 import com.devarshi.buzoclone.ExoPlayerManager;
 import com.devarshi.buzoclone.R;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -117,10 +120,10 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
         holder.imageViewSendTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri imageUri = Uri.parse(modelFeedArrayListStatusViewer.get(position).getAbsolutePath());
+                Uri mediaUri = Uri.parse(modelFeedArrayListStatusViewer.get(position).getAbsolutePath());
                 Intent whatsAppIntent = new Intent(Intent.ACTION_SEND);
                 whatsAppIntent.setPackage("com.whatsapp");
-                whatsAppIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                whatsAppIntent.putExtra(Intent.EXTRA_STREAM, mediaUri);
                 whatsAppIntent.setType("image/*");
                 whatsAppIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
@@ -132,36 +135,65 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
             }
         });
 
-        holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (filePath.endsWith(".jpg")) {
+            holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                checkAndRequestPermissions();
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
+                    checkAndRequestPermissions();
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
 
-                Bitmap bitmap = BitmapFactory.decodeFile(currentFile.getAbsolutePath());
-                File file = new File(modelFeedArrayListStatusViewer.get(position).getAbsolutePath());
-                Intent intentShare;
-                try {
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    Bitmap bitmap = BitmapFactory.decodeFile(currentFile.getAbsolutePath());
+                    File file = new File(modelFeedArrayListStatusViewer.get(position).getAbsolutePath());
+                    Intent intentShare;
+                    try {
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
 
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    intentShare = new Intent(Intent.ACTION_SEND);
-                    intentShare.setType("image/*");
-                    intentShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                    intentShare.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                        intentShare = new Intent(Intent.ACTION_SEND);
+                        intentShare.setType("image/*");
+                        intentShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intentShare.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
 
+                    }
+                    context.startActivity(Intent.createChooser(intentShare, "Share item using"));
                 }
-                context.startActivity(Intent.createChooser(intentShare, "Share item using"));
+            });
+        } else if (filePath.endsWith(".mp4")) {
+            holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
+                    //old method (which includes context, context.getPackageName())
+                    /*File videoFile = new File(filePath);
+                    Uri videoURI = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            ? FileProvider.getUriForFile(context, context.getPackageName(), videoFile)
+                            : Uri.fromFile(videoFile);
+                    ShareCompat.IntentBuilder.from((Activity) context)
+                            .setStream(videoURI)
+                            .setType("video/mp4")
+                            .setChooserTitle("Share video")
+                            .startChooser();*/
+
+                    File videoFile = new File(filePath);
+                    Uri videoURI = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            ? FileProvider.getUriForFile(context,
+                            BuildConfig.APPLICATION_ID + ".provider", videoFile)
+                            : Uri.fromFile(videoFile);
+                    ShareCompat.IntentBuilder.from((Activity) context)
+                            .setStream(videoURI)
+                            .setType("video/mp4")
+                            .setChooserTitle("Share video")
+                            .startChooser();
+                }
+            });
+        }
 
         holder.imageViewDownload.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -171,8 +203,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
                 if (filePath.endsWith(".jpg")) {
                     Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
                     addToFavImage(myBitMap, filePath);
-                }
-                else if (filePath.endsWith(".mp4")){
+                } else if (filePath.endsWith(".mp4")) {
                     addToFavVideo(filePath);
                 }
                 /*else if (filePath.endsWith(".mp4")){
@@ -198,63 +229,16 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
         });
     }
 
-    /*public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.getParentFile().exists())
-            destFile.getParentFile().mkdirs();
-
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
-    }*/
-
-    /*private void createDirectoryAndSaveFile(Bitmap imageToSave,String fileName) {
-
-        File direct = new File(Environment.getExternalStorageDirectory() + "/Buzo-Video Status MakerOne/Status Downloader-Buzo Video Status MakerOne");
-
-        if (!direct.exists()) {
-            File directCreate = new File("/Buzo-Video Status MakerOne/Status Downloader-Buzo Video Status MakerOne");
-            directCreate.mkdirs();
-        }
-
-        File file = new File("/Buzo-Video Status MakerOne/Status Downloader-Buzo Video Status MakerOne", fileName);
-        if (file.exists()) {
-            file.delete();
-        }
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void addToFavImage(Bitmap bitmap, String filename) {
-        /*int index=filename.lastIndexOf('/');
-        String files = filename.substring(0,index);*/
+    public void addToFavImage(Bitmap bitmap, String filename1) {
+
+        int index = filename1.lastIndexOf('/');
+        String filename = filename1.substring(index);
+        /*Log.e("filesales", "" + filename);
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-        filename = "fav" + timeStamp + ".JPG";
+        filename = "fav" + timeStamp + ".jpg";*/
 
 //        UUID uuid = UUID.randomUUID();
-
 
         File direct = new File(Environment.getExternalStorageDirectory() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
 

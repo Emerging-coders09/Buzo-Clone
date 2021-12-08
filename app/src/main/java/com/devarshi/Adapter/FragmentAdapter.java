@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.devarshi.buzoclone.SavedFragment;
+import com.devarshi.buzoclone.StatusSaverFragment;
 import com.devarshi.buzoclone.StatusViewerFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0: return new StatusViewerFragment();
-            case 1: return new SavedFragment();
+            case 1: return new StatusSaverFragment();
         }
         return new StatusViewerFragment();
     }

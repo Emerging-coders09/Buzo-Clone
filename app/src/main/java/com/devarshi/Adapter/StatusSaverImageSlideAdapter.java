@@ -8,20 +8,26 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devarshi.buzoclone.BuildConfig;
 import com.devarshi.buzoclone.ExoPlayerManager;
 import com.devarshi.buzoclone.R;
+import com.devarshi.buzoclone.StatusSaverActivity;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.exoplayer2.ui.PlayerView;
 
@@ -104,37 +110,79 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
             }
         });
 
-        holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (filePath.endsWith(".jpg")) {
+            holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                checkAndRequestPermissions();
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
+                    checkAndRequestPermissions();
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
 
-                Bitmap bitmap = BitmapFactory.decodeFile(currentFile.getAbsolutePath());
-                File file = new File(modelFeedArrayListStatusSaver.get(position).getAbsolutePath());
-                Intent intentShare;
+                    Bitmap bitmap = BitmapFactory.decodeFile(currentFile.getAbsolutePath());
+                    File file = new File(modelFeedArrayListStatusSaver.get(position).getAbsolutePath());
+                    Intent intentShare;
 
-                try {
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    try {
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
 
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    intentShare = new Intent(Intent.ACTION_SEND);
-                    intentShare.setType("image/*");
-                    intentShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                    intentShare.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                        intentShare = new Intent(Intent.ACTION_SEND);
+                        intentShare.setType("image/*");
+                        intentShare.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intentShare.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+
+                    }
+                    context.startActivity(Intent.createChooser(intentShare, "Share item using"));
 
                 }
-                context.startActivity(Intent.createChooser(intentShare, "Share item using"));
+            });
+        }
+        else if (filePath.endsWith(".mp4")){
+            holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    //old method (which includes context, context.getPackageName())
+                    /*File videoFile = new File(filePath);
+                    Uri videoURI = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            ? FileProvider.getUriForFile(context, context.getPackageName(), videoFile)
+                            : Uri.fromFile(videoFile);
+                    ShareCompat.IntentBuilder.from((Activity) context)
+                            .setStream(videoURI)
+                            .setType("video/mp4")
+                            .setChooserTitle("Share video")
+                            .startChooser();*/
+
+                    File videoFile = new File(filePath);
+                    Uri videoURI = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            ? FileProvider.getUriForFile(context,
+                            BuildConfig.APPLICATION_ID + ".provider", videoFile)
+                            : Uri.fromFile(videoFile);
+                    ShareCompat.IntentBuilder.from((Activity) context)
+                            .setStream(videoURI)
+                            .setType("video/mp4")
+                            .setChooserTitle("Share video")
+                            .startChooser();
+                }
+            });
+        }
+
+        holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File file = new File(filePath);
+                if (file.exists()) {
+                    file.delete();
+                    ((StatusSaverActivity)context).finish();
+                    Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
 
     }
 

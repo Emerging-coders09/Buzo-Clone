@@ -34,7 +34,7 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
     @NotNull
     @Override
     public SavedViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_downloader_media_row_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_saver_media_row_item,parent,false);
         return new SavedViewHolder(view);
     }
 
@@ -45,12 +45,12 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
 
         String filePath = currentFile.toString();
 
-        if (currentFile.getAbsolutePath().endsWith(".mp4")){
+        if (filePath.endsWith(".mp4")){
             Glide.with(context).load(filePath).into(holder.imageViewRounded);
             holder.imageViewPlay.setVisibility(View.VISIBLE);
         }
 
-        else {
+        else if (filePath.endsWith(".jpg")){
             Glide.with(context).load(filePath).into(holder.imageViewRounded);
             holder.imageViewPlay.setVisibility(View.GONE);
         }
@@ -84,8 +84,8 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
         public SavedViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
-            imageViewRounded = itemView.findViewById(R.id.imageViewStatus);
-            imageViewPlay = itemView.findViewById(R.id.playImageView);
+            imageViewRounded = itemView.findViewById(R.id.imageViewSaved);
+            imageViewPlay = itemView.findViewById(R.id.playImageViewSs);
         }
     }
 }
