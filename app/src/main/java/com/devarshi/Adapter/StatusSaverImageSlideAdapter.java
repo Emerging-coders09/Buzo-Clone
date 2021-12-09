@@ -2,7 +2,9 @@ package com.devarshi.Adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.StrictMode;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +60,7 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
     @Override
     public StatusSaverSlidingViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_on_click_saver,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_on_click_saver, parent, false);
         return new StatusSaverSlidingViewHolder(view);
     }
 
@@ -69,15 +72,13 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
         File currentFile = modelFeedArrayListStatusSaver.get(position);
         String filePath = currentFile.toString();
 
-        if (filePath.endsWith(".jpg")){
+        if (filePath.endsWith(".jpg")) {
             holder.statusImageView.setVisibility(View.VISIBLE);
 
             Glide.with(context).load(filePath).into(holder.statusImageView);
 
             holder.statusImageView.setBackgroundColor(context.getResources().getColor(android.R.color.black));
-        }
-
-        else {
+        } else {
             holder.statusImageView.setVisibility(View.GONE);
             holder.playerView.setVisibility(View.VISIBLE);
             holder.playerView.setBackgroundColor(context.getResources().getColor(android.R.color.black));
@@ -141,8 +142,7 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
 
                 }
             });
-        }
-        else if (filePath.endsWith(".mp4")){
+        } else if (filePath.endsWith(".mp4")) {
             holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -175,12 +175,33 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
         holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = new File(filePath);
-                if (file.exists()) {
-                    file.delete();
-                    ((StatusSaverActivity)context).finish();
-                    Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
-                }
+
+                new AlertDialog.Builder(context)
+                        .setTitle(Html.fromHtml("<b><center>" + "Delete" + "</center></b>"))
+                        .setMessage("Do you want to delete this file?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File file = new File(filePath);
+                                if (file.exists()) {
+                                    file.delete();
+                                    ((StatusSaverActivity) context).finish();
+                                    Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
+
+//                                  modelFeedArrayListStatusSaver.remove(position);
+//                                  notifyItemRemoved(position);
+//                                  notifyItemChanged(position);
+//                                  notifyDataSetChanged();
+//                                  statusSaverFragment.getdata(v.getRootView());
+
+
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+
+
             }
         });
 
@@ -220,7 +241,12 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
         return true;
     }
 
-    public static class StatusSaverSlidingViewHolder extends RecyclerView.ViewHolder{
+    /*public void removeItem(List< TodoItem > currentist){
+        list= currentist;
+        notifyDataSetChanged();
+    }*/
+
+    public static class StatusSaverSlidingViewHolder extends RecyclerView.ViewHolder {
 
         public PlayerView playerView;
         PhotoView statusImageView;
@@ -241,7 +267,7 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
         }
     }
 
-    public interface OnPagerItemSelected{
+    public interface OnPagerItemSelected {
         void pagerItemSelected();
     }
 }

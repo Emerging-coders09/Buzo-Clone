@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.BuildConfig;
 import com.devarshi.buzoclone.ExoPlayerManager;
 import com.devarshi.buzoclone.R;
+import com.devarshi.buzoclone.StatusSaverFragment;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.exoplayer2.ui.PlayerView;
 
@@ -44,9 +45,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -195,38 +194,60 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
             });
         }
 
-        holder.imageViewDownload.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.Q)
-            @Override
-            public void onClick(View v) {
+        int indexExistence = filePath.lastIndexOf('/');
+        String filenameExistence = filePath.substring(indexExistence);
 
-                if (filePath.endsWith(".jpg")) {
-                    Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
-                    addToFavImage(myBitMap, filePath);
-                } else if (filePath.endsWith(".mp4")) {
-                    addToFavVideo(filePath);
+        File fileExistence = new File(Environment.getExternalStorageDirectory() + StatusSaverFragment.SAVED_FILES_LOCATION, filenameExistence);
+
+        if (!fileExistence.exists()) {
+
+            holder.imageViewDownload.setVisibility(View.VISIBLE);
+            holder.imageViewDownloadComplete.setVisibility(View.GONE);
+
+            holder.imageViewDownload.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.Q)
+                @Override
+                public void onClick(View v) {
+
+                    if (filePath.endsWith(".jpg")) {
+                        Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
+                        addToFavImage(myBitMap, filePath);
+                    } else if (filePath.endsWith(".mp4")) {
+                        addToFavVideo(filePath);
+                    }
+
+                    Toast.makeText(context, "Item Saved", Toast.LENGTH_SHORT).show();
+                    holder.imageViewDownload.setVisibility(View.GONE);
+                    holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
                 }
-                /*else if (filePath.endsWith(".mp4")){
-                    Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
-                    addToFavVideo(myBitMap,filePath);
-                }*/
-                /*try {
-                    copyFile(currentFile,new File(String.valueOf(newFile)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                Toast.makeText(context, "Item Saved", Toast.LENGTH_SHORT).show();
-                holder.imageViewDownload.setVisibility(View.GONE);
-                holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
-            }
-        });
+            });
 
-        holder.imageViewDownloadComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Item is already downloaded!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        } else if (fileExistence.exists()) {
+            holder.imageViewDownload.setVisibility(View.GONE);
+            holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
+
+            holder.imageViewDownloadComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Item already downloaded!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
+
+        /*if (fileExistence.exists()) {
+
+            holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
+            holder.imageViewDownload.setVisibility(View.GONE);
+
+            holder.imageViewDownloadComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Item is already downloaded!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -274,8 +295,6 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
 
     public void addToFavVideo(String filePath) {
 
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-
         try {
             File currentFile = new File(filePath);
             File loc = Environment.getExternalStorageDirectory();
@@ -286,8 +305,9 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
                 videoStoreDirectory.mkdirs();
             }
 
-            String fileName = String.format("fav" + timeStamp + ".mp4");
-            File newFile = new File(directory, fileName);
+            int index = filePath.lastIndexOf('/');
+            String filename = filePath.substring(index);
+            File newFile = new File(directory, filename);
 
             if (currentFile.exists()) {
 

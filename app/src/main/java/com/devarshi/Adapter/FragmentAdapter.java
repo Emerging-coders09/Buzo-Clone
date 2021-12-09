@@ -32,6 +32,11 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public int getItemPosition(@NotNull Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return tabCount;
     }

@@ -19,17 +19,21 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 
-public class StatusSaverFragment extends Fragment {
+public class StatusSaverFragment extends Fragment{
 
-    String SAVED_FILES_LOCATION = "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker";
+    public static String SAVED_FILES_LOCATION = "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker";
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshLayoutSaved;
     public ListAdapterSaved listAdapterSaved;
 
-    private static final String TAG = "StatusSaverFragment";
-
     public StatusSaverFragment() {
+
         // Required empty public constructor
+    }
+
+    public StatusSaverFragment getInstance(){
+        StatusSaverFragment statusSaverFragment = new StatusSaverFragment();
+        return statusSaverFragment;
     }
 
 
@@ -52,13 +56,21 @@ public class StatusSaverFragment extends Fragment {
                 swipeRefreshLayoutSaved.setRefreshing(false);
             }
         });
+        getdata(view);
+        return view;
+    }
 
+    public void getdata(View view){
+        mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMediaSaved);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
         listAdapterSaved = new ListAdapterSaved(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
         mRecyclerViewMediaList.setAdapter(listAdapterSaved);
+    }
 
-        return view;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @NotNull

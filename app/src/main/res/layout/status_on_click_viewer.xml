@@ -54,6 +54,7 @@
         <ImageView
             android:id="@+id/imageViewDownload"
             android:layout_width="30dp"
+            android:visibility="gone"
             android:layout_height="30dp"
             android:src="@drawable/ic_baseline_arrow_downward_64"
             app:layout_constraintBottom_toBottomOf="@+id/downloadCircle1"
