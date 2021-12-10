@@ -1,5 +1,6 @@
 package com.devarshi.buzoclone;
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class StatusSaverFragment extends Fragment{
 
@@ -25,24 +27,21 @@ public class StatusSaverFragment extends Fragment{
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshLayoutSaved;
     public ListAdapterSaved listAdapterSaved;
+    ArrayList<File> modelFeedArrayListStatusSaver;
+
+    BroadcastReceiver brDelete;
 
     public StatusSaverFragment() {
 
         // Required empty public constructor
     }
 
-    public StatusSaverFragment getInstance(){
-        StatusSaverFragment statusSaverFragment = new StatusSaverFragment();
-        return statusSaverFragment;
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status_saver, container, false);
-
+        modelFeedArrayListStatusSaver = new ArrayList<>();
         mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMediaSaved);
         swipeRefreshLayoutSaved = view.findViewById(R.id.swipeRefreshSaved);
 
@@ -51,22 +50,40 @@ public class StatusSaverFragment extends Fragment{
             public void onRefresh() {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-                listAdapterSaved = new ListAdapterSaved(getActivity(), StatusSaverFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
+                modelFeedArrayListStatusSaver = StatusSaverFragment.this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION));
+                Collections.reverse(modelFeedArrayListStatusSaver);
+                listAdapterSaved = new ListAdapterSaved(getActivity(), modelFeedArrayListStatusSaver);
                 mRecyclerViewMediaList.setAdapter(listAdapterSaved);
                 swipeRefreshLayoutSaved.setRefreshing(false);
             }
         });
-        getdata(view);
+
+        mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMediaSaved);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
+        modelFeedArrayListStatusSaver = this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION));
+        Collections.reverse(modelFeedArrayListStatusSaver);
+        listAdapterSaved = new ListAdapterSaved(getActivity(), modelFeedArrayListStatusSaver);
+        mRecyclerViewMediaList.setAdapter(listAdapterSaved);
+
+        /*requireContext().registerReceiver(brDelete,new IntentFilter(Intent.ACTION_DELETE));
+
+        brDelete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Intent.ACTION_DELETE)){
+                    listAdapterSaved.notifyDataSetChanged();
+                }
+            }
+        };*/
         return view;
     }
 
-    public void getdata(View view){
-        mRecyclerViewMediaList = view.findViewById(R.id.recyclerViewMediaSaved);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
-        listAdapterSaved = new ListAdapterSaved(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + SAVED_FILES_LOCATION)));
-        mRecyclerViewMediaList.setAdapter(listAdapterSaved);
-    }
+    /*@Override
+    public void onStop() {
+        super.onStop();
+        requireContext().unregisterReceiver(brDelete);
+    }*/
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -90,4 +107,9 @@ public class StatusSaverFragment extends Fragment{
         }
         return inFiles;
     }
+
+    /*@Override
+    public void update() {
+        getFragmentManager().beginTransaction().attach(this).detach(this).commit();
+    }*/
 }

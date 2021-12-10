@@ -71,6 +71,10 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
         return modelFeedArrayListSaved.size();
     }
 
+    /*public interface RefreshAdapter{
+        void refresh(int p);
+    }*/
+
     @Override
     public int getItemViewType(int position) {
         return position;

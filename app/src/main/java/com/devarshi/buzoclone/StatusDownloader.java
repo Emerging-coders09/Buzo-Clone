@@ -12,7 +12,7 @@ import com.devarshi.Adapter.FragmentAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
-public class StatusDownloader extends AppCompatActivity {
+public class StatusDownloader extends AppCompatActivity{
 
     TabLayout tabLayout;
     TabItem statusTabItem, savedTabItem;

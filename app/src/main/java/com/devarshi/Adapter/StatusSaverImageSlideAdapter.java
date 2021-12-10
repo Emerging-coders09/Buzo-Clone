@@ -41,10 +41,10 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder> {
+public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder>{
 
     final Context context;
-    final ArrayList<File> modelFeedArrayListStatusSaver;
+    ArrayList<File> modelFeedArrayListStatusSaver;
     int pos;
     OnPagerItemSelected mListener;
 
@@ -188,20 +188,21 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
                                     ((StatusSaverActivity) context).finish();
                                     Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
 
-//                                  modelFeedArrayListStatusSaver.remove(position);
-//                                  notifyItemRemoved(position);
-//                                  notifyItemChanged(position);
-//                                  notifyDataSetChanged();
-//                                  statusSaverFragment.getdata(v.getRootView());
+                                    /*Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_DELETE);
+                                    context.sendBroadcast(intent);*/
+//                                    removeItem(modelFeedArrayListStatusSaver,position);
+                                    modelFeedArrayListStatusSaver.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyDataSetChanged();
 
+//                                  statusSaverFragment.getdata(v.getRootView());
 
                                 }
                             }
                         })
                         .setNegativeButton("No", null)
                         .show();
-
-
             }
         });
 
@@ -240,11 +241,6 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
         }
         return true;
     }
-
-    /*public void removeItem(List< TodoItem > currentist){
-        list= currentist;
-        notifyDataSetChanged();
-    }*/
 
     public static class StatusSaverSlidingViewHolder extends RecyclerView.ViewHolder {
 

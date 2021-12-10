@@ -32,12 +32,25 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public int getItemPosition(@NotNull Object object) {
-        return POSITION_NONE;
-    }
-
-    @Override
     public int getCount() {
         return tabCount;
     }
+
+    @Override
+    public int getItemPosition(@NonNull @NotNull Object object) {
+        return POSITION_NONE;
+    }
+
+    /*@Override
+    public int getItemPosition(@NonNull @NotNull Object object) {
+        Updatable f = (Updatable) object;
+        if (f != null) {
+            f.update();
+        }
+        return super.getItemPosition(object);
+    }
+
+    public interface Updatable{
+        void update();
+    }*/
 }

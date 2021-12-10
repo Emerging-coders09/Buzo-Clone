@@ -2,6 +2,7 @@ package com.devarshi.buzoclone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,10 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_status_saver);
 
         viewPagerSaver = findViewById(R.id.viewPagerSs);
@@ -32,11 +37,11 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
         Intent intent = getIntent();
 
         modelFeedArrayListStatusSaver = (ArrayList<File>) getIntent().getSerializableExtra("modelFeedArrayListSaved");
-        position = intent.getIntExtra("position",0);
+        position = intent.getIntExtra("position", 0);
 
-        StatusSaverImageSlideAdapter saverImageSlideAdapter = new StatusSaverImageSlideAdapter(StatusSaverActivity.this,modelFeedArrayListStatusSaver,position,this);
+        StatusSaverImageSlideAdapter saverImageSlideAdapter = new StatusSaverImageSlideAdapter(StatusSaverActivity.this, modelFeedArrayListStatusSaver, position, this);
         viewPagerSaver.setAdapter(saverImageSlideAdapter);
-        viewPagerSaver.setCurrentItem(position,false);
+        viewPagerSaver.setCurrentItem(position, false);
         viewPagerSaver.setOffscreenPageLimit(1);
 
         viewPagerSaver.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -48,22 +53,24 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
                 RecyclerView rv = (RecyclerView) viewPagerSaver.getChildAt(0);
                 statusSaverSlidingViewHolder = (StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder) rv.findViewHolderForAdapterPosition(p);
 
-                File currentFile = modelFeedArrayListStatusSaver.get(p);
-                String filePath = currentFile.toString();
+                if (modelFeedArrayListStatusSaver.size() > 0) {
+                    File currentFile = modelFeedArrayListStatusSaver.get(p);
+                    String filePath = currentFile.toString();
 
-                if (filePath.endsWith(".mp4")) {
-                    exoPlayerManager.initExoplayer(filePath, new ExoPlayerManager.OnVideoInitializedCompleteListener() {
-                        @Override
-                        public void onError(Exception e) {
-                            e.printStackTrace();
-                        }
+                    if (filePath.endsWith(".mp4")) {
+                        exoPlayerManager.initExoplayer(filePath, new ExoPlayerManager.OnVideoInitializedCompleteListener() {
+                            @Override
+                            public void onError(Exception e) {
+                                e.printStackTrace();
+                            }
 
-                        @Override
-                        public void onInitialized() {
-                            statusSaverSlidingViewHolder.playerView.setPlayer(exoPlayerManager.exoPlayer);
-                            exoPlayerManager.playVideo();
-                        }
-                    });
+                            @Override
+                            public void onInitialized() {
+                                statusSaverSlidingViewHolder.playerView.setPlayer(exoPlayerManager.exoPlayer);
+                                exoPlayerManager.playVideo();
+                            }
+                        });
+                    }
                 }
             }
 
