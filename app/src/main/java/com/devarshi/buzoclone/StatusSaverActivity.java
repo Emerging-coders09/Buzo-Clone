@@ -115,4 +115,5 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
         finish();
         exoPlayerManager.releaseVideo();
     }
+
 }

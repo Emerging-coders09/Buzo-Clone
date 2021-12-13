@@ -5,8 +5,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +22,14 @@
         android:theme="@style/Theme.BuzoClone"
         android:windowSoftInputMode="stateHidden">
 
+        <!--<receiver android:name=".StatusSaverFragment$MyBroadCastReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="delete"/>
+            </intent-filter>
+        </receiver>-->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.devarshi.buzoclone.provider"
@@ -28,6 +39,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        
         <activity android:name=".StatusSaverActivity"></activity>
         <activity
             android:name=".StatusViewerActivity"

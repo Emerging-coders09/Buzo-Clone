@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -47,12 +46,16 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
     ArrayList<File> modelFeedArrayListStatusSaver;
     int pos;
     OnPagerItemSelected mListener;
+//    OnItemDelete onItemDelete;
+
+    public static String delete = "com.devarshi.Adapter.BR_DELETE_STATUS";
 
     public StatusSaverImageSlideAdapter(Context context, ArrayList<File> modelFeedArrayListStatusSaver, int pos, OnPagerItemSelected mListener) {
         this.context = context;
         this.modelFeedArrayListStatusSaver = modelFeedArrayListStatusSaver;
         this.pos = pos;
         this.mListener = mListener;
+//        this.onItemDelete = onItemDelete;
     }
 
     @NonNull
@@ -185,16 +188,19 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
                                 File file = new File(filePath);
                                 if (file.exists()) {
                                     file.delete();
-                                    ((StatusSaverActivity) context).finish();
-                                    Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
 
-                                    /*Intent intent = new Intent();
-                                    intent.setAction(Intent.ACTION_DELETE);
-                                    context.sendBroadcast(intent);*/
-//                                    removeItem(modelFeedArrayListStatusSaver,position);
+//                                    onItemDelete.deleteMediaItemAtPosition(position);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("position", position);
+//                                    context.sendBroadcast(new Intent(context, StatusSaverFragment.class).setAction(delete));
+
+                                    intent.setAction(delete);
+                                    context.sendBroadcast(intent);
+                                    ((StatusSaverActivity) context).finish();
+                                   /* Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
                                     modelFeedArrayListStatusSaver.remove(position);
                                     notifyItemRemoved(position);
-                                    notifyDataSetChanged();
+                                    notifyDataSetChanged();*/
 
 //                                  statusSaverFragment.getdata(v.getRootView());
 
@@ -206,6 +212,11 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
             }
         });
 
+    }
+
+    public void updateAdapter(ArrayList<File> modelFeedArrayList) {
+        this.modelFeedArrayListStatusSaver = modelFeedArrayList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -265,5 +276,9 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
 
     public interface OnPagerItemSelected {
         void pagerItemSelected();
+    }
+
+    public interface OnItemDelete {
+        void deleteMediaItemAtPosition(int position);
     }
 }
