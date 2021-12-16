@@ -62,10 +62,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> listOfVideoThumbnails = new ArrayList<>();
     ArrayList<String> listOfVideoUrls = new ArrayList<>();
 
-    int page = 1, limit = 20;
+    int page = 1;
 
-    Boolean isScrolling = false;
-    int currentItems,totalItems,scrolledOutItems;
+    /*Boolean isScrolling = false;
+    int currentItems,totalItems,scrolledOutItems;*/
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
     /*private int visibleThreshold = 1; // trigger just one item before the end
     private int lastVisibleItem, totalItemCount;*/
 
@@ -168,12 +170,37 @@ public class MainActivity extends AppCompatActivity {
 
         CallRetrofitForHomeScreenVideos();
 
-//        fetchData(page,limit);
+        /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
+                if (dy > 0) { //check for scroll down
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    totalItemCount = gridLayoutManager.getItemCount();
+                    pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            progressBar.setVisibility(View.VISIBLE);
+                            CallRetrofitForHomeScreenVideos();
+                            // Do pagination.. i.e. fetch new data
+
+                            loading = true;
+                        }
+                    }
+                }
+            }
+        });*/
+
+//        fetchData(page,limit);
         nScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredWidth()){
+                    progressBar.setVisibility(View.GONE);
                     page++;
                     progressBar.setVisibility(View.VISIBLE);
                     CallRetrofitForHomeScreenVideos();
