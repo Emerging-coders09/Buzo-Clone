@@ -1,9 +1,6 @@
 package com.devarshi.buzoclone;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,7 +15,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.devarshi.Adapter.ListAdapterSaved;
-import com.devarshi.Adapter.StatusSaverImageSlideAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,8 +45,8 @@ public class StatusSaverFragment extends Fragment {
     public static ArrayList<File> modelFeedArrayListStatusSaver;
     public static int position;
 
-    BroadcastReceiver brDelete;
-    IntentFilter filter;
+    /*BroadcastReceiver brDelete;
+    IntentFilter filter;*/
 
 //    MyBroadCastReceiver myBroadCastReceiver = new MyBroadCastReceiver();
 
@@ -91,42 +87,41 @@ public class StatusSaverFragment extends Fragment {
         listAdapterSaved = new ListAdapterSaved(getActivity(), modelFeedArrayListStatusSaver);
         mRecyclerViewMediaList.setAdapter(listAdapterSaved);
 
-        filter = new IntentFilter();
+        //Log.d("ArrayListSize1", ""+modelFeedArrayListStatusSaver.size());
+
+        /*filter = new IntentFilter();
         filter.addAction(StatusSaverImageSlideAdapter.delete);
 
         brDelete = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                Log.d("StatusSaver OnReceive", "onReceive: ");
-//                if (intent.getAction().equals("delete")){
-                position = intent.getIntExtra("position", 0);
-                modelFeedArrayListStatusSaver.remove(position);
-                listAdapterSaved.notifyItemRemoved(position);
-                listAdapterSaved.notifyDataSetChanged();
-                Collections.reverse(modelFeedArrayListStatusSaver);
-
-//                }
-
-            }
-        };
-
-        context.registerReceiver(brDelete, filter);
-
-        Collections.reverse(modelFeedArrayListStatusSaver);
-
-
-
-        /*requireContext().registerReceiver(brDelete,new IntentFilter(Intent.ACTION_DELETE));
-
-        brDelete = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Intent.ACTION_DELETE)){
+                Log.d("ArrayListSize", "" + modelFeedArrayListStatusSaver.size());
+                if (intent.getAction().equals(Intent.ACTION_DELETE)) {
+                    position = intent.getIntExtra("position", 0);
+                    modelFeedArrayListStatusSaver.remove(position);
+                    listAdapterSaved.notifyItemRemoved(position);
                     listAdapterSaved.notifyDataSetChanged();
                 }
             }
         };*/
+
+//        requireContext().registerReceiver(brDelete,new IntentFilter(Intent.ACTION_DELETE));
+
+        /*brDelete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Intent.ACTION_DELETE)){
+
+                    position = intent.getIntExtra("position",0);
+                    modelFeedArrayListStatusSaver.remove(position);
+                    listAdapterSaved.notifyDataSetChanged();
+                }
+            }
+        };
+
+        context.registerReceiver(brDelete, filter);*/
+
         return view;
     }
 
@@ -136,17 +131,23 @@ public class StatusSaverFragment extends Fragment {
         this.context = context;
     }
 
-    @Override
+    /*@Override
+    public void onResume() {
+        super.onResume();
+    }*/
+
+    /*@Override
     public void onStart() {
         super.onStart();
-//        context.registerReceiver(brDelete,filter);
+        context.registerReceiver(brDelete,filter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        context.unregisterReceiver(brDelete);
-    }
+        //context.unregisterReceiver(brDelete);
+    }*/
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

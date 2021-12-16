@@ -2,6 +2,7 @@ package com.devarshi.buzoclone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,9 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
     StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder statusSaverSlidingViewHolder;
 
     final ExoPlayerManager exoPlayerManager = new ExoPlayerManager(this);
+
+    /*BroadcastReceiver brDeleteSsa;
+    IntentFilter filterSsa;*/
 
 
     @Override
@@ -84,6 +88,22 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
                 super.onPageScrollStateChanged(state);
             }
         });
+
+        /*filterSsa = new IntentFilter();
+        filterSsa.addAction(StatusSaverImageSlideAdapter.delete);
+
+
+        brDeleteSsa = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                position = intent.getIntExtra("position",0);
+                modelFeedArrayListStatusSaver.remove(position);
+                saverImageSlideAdapter.notifyItemRemoved(position);
+                saverImageSlideAdapter.notifyDataSetChanged();
+            }
+        };
+
+        this.registerReceiver(brDeleteSsa,filterSsa);*/
     }
 
     @Override
@@ -114,6 +134,23 @@ public class StatusSaverActivity extends AppCompatActivity implements StatusSave
     public void pagerItemSelected() {
         finish();
         exoPlayerManager.releaseVideo();
+    }
+
+    @Override
+    public void deleteItems(int position) {
+
+        File fff = modelFeedArrayListStatusSaver.get(position);
+        File file = new File(fff.getPath());
+        file.delete();
+
+        Intent intent = new Intent();
+        intent.putExtra("position", position);
+
+        intent.setAction(StatusSaverImageSlideAdapter.delete);
+        sendBroadcast(intent);
+
+        Log.d("Checkfordelete", "delete called");
+        finish();
     }
 
 }

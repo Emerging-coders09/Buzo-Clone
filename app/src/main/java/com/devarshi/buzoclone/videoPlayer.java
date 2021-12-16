@@ -1,5 +1,6 @@
 package com.devarshi.buzoclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -15,7 +16,7 @@ public class videoPlayer extends AppCompatActivity {
     //    DoubleTapPlayerView playerView;
     ExoPlayer player;
     PlayerView playerView;
-    String singleURL = "https://whatsappstatusline.com/wp-content/uploads/2020/04/Good-Morning-Full-Screen-Status-Video-1.mp4";
+    String singleURL = null;
 //    YouTubeOverlay ytOverlay;
 
     @Override
@@ -30,7 +31,13 @@ public class videoPlayer extends AppCompatActivity {
         playerView = findViewById(R.id.previewPlayerView);
 //        ytOverlay = findViewById(R.id.ytOverlay);
 
-        player = new ExoPlayer.Builder(this).build();
+        playerView.setBackgroundColor(this.getResources().getColor(android.R.color.black));
+
+        player = new ExoPlayer.Builder(videoPlayer.this).build();
+
+        Intent intent = getIntent();
+
+        singleURL = intent.getStringExtra("dataForVideoUrls");
 
         MediaItem mediaItem = MediaItem.fromUri(singleURL);
         player.addMediaItem(mediaItem);
@@ -41,6 +48,8 @@ public class videoPlayer extends AppCompatActivity {
         player.play();
 //        initDoubleTapPlayerView();
     }
+
+
 
     @Override
     public void onBackPressed() {

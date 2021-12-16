@@ -29,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.BuildConfig;
 import com.devarshi.buzoclone.ExoPlayerManager;
 import com.devarshi.buzoclone.R;
-import com.devarshi.buzoclone.StatusSaverActivity;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.exoplayer2.ui.PlayerView;
 
@@ -40,7 +39,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder>{
+public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSaverImageSlideAdapter.StatusSaverSlidingViewHolder> {
 
     final Context context;
     ArrayList<File> modelFeedArrayListStatusSaver;
@@ -187,16 +186,20 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
                             public void onClick(DialogInterface dialog, int which) {
                                 File file = new File(filePath);
                                 if (file.exists()) {
-                                    file.delete();
+                                    mListener.deleteItems(position);
+
+                                    //file.delete();
 
 //                                    onItemDelete.deleteMediaItemAtPosition(position);
-                                    Intent intent = new Intent();
+
+                                   /* Intent intent = new Intent();
                                     intent.putExtra("position", position);
-//                                    context.sendBroadcast(new Intent(context, StatusSaverFragment.class).setAction(delete));
 
                                     intent.setAction(delete);
                                     context.sendBroadcast(intent);
-                                    ((StatusSaverActivity) context).finish();
+
+                                    Log.d("Checkfordelete","delete called");
+                                    ((StatusSaverActivity) context).finish();*/
                                    /* Toast.makeText(context, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
                                     modelFeedArrayListStatusSaver.remove(position);
                                     notifyItemRemoved(position);
@@ -212,11 +215,6 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
             }
         });
 
-    }
-
-    public void updateAdapter(ArrayList<File> modelFeedArrayList) {
-        this.modelFeedArrayListStatusSaver = modelFeedArrayList;
-        notifyDataSetChanged();
     }
 
     @Override
@@ -276,9 +274,8 @@ public class StatusSaverImageSlideAdapter extends RecyclerView.Adapter<StatusSav
 
     public interface OnPagerItemSelected {
         void pagerItemSelected();
+
+        void deleteItems(int position);
     }
 
-    public interface OnItemDelete {
-        void deleteMediaItemAtPosition(int position);
-    }
 }

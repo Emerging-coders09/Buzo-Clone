@@ -3,8 +3,6 @@ package com.devarshi.Adapter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +44,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusViewerImageSlideAdapter.StatusViewerSlidingViewHolder> {
 
@@ -208,17 +204,19 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
                 @RequiresApi(api = Build.VERSION_CODES.Q)
                 @Override
                 public void onClick(View v) {
-
-                    if (filePath.endsWith(".jpg")) {
-                        Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
-                        addToFavImage(myBitMap, filePath);
-                    } else if (filePath.endsWith(".mp4")) {
-                        addToFavVideo(filePath);
-                    }
+//                        Bitmap myBitMap = BitmapFactory.decodeFile(filePath);
+                    downloadItem(filePath);
 
                     Toast.makeText(context, "Item Saved", Toast.LENGTH_SHORT).show();
                     holder.imageViewDownload.setVisibility(View.GONE);
                     holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
+
+                    holder.imageViewDownloadComplete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Item already downloaded!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
 
@@ -251,13 +249,74 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void addToFavImage(Bitmap bitmap, String filename1) {
+    public void downloadItem(String filePath) {
 
-        int index = filename1.lastIndexOf('/');
+        try {
+            File currentFile = new File(filePath);
+            File directory = new File(Environment.getExternalStorageDirectory() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
+
+            if (!directory.exists()) {
+                File imageStoreDirectory = new File(Environment.getExternalStorageDirectory() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
+                imageStoreDirectory.mkdirs();
+            }
+
+            int index = filePath.lastIndexOf('/');
+            String filename = filePath.substring(index);
+            File newFile = new File(directory, filename);
+
+            if (currentFile.exists()) {
+
+                InputStream inputStream = new FileInputStream(currentFile);
+                OutputStream outputStream = new FileOutputStream(newFile);
+
+                byte[] buf = new byte[1024];
+                int len;
+
+                while ((len = inputStream.read(buf)) > 0) {
+                    outputStream.write(buf, 0, len);
+                }
+
+                outputStream.flush();
+                inputStream.close();
+                outputStream.close();
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*try {
+            OutputStream out;
+            InputStream inputStream = new FileInputStream(filename1);
+
+            String root = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+            File createDir = new File(root + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker" + File.separator);
+            if (!createDir.exists()) {
+                createDir.mkdir();
+            }
+            File file = new File(root + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker" + File.separator + filename1);
+            file.createNewFile();
+            out = new FileOutputStream(file);
+
+            byte[] data = new byte[1024];
+            int len;
+
+            while ((len = inputStream.read(data)) > 0) {
+                out.write(data, 0, len);
+            }
+            out.write(data);
+            out.close();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }*/
+        /*int index = filename1.lastIndexOf('/');
         String filename = filename1.substring(index);
-        /*Log.e("filesales", "" + filename);
+        *//*Log.e("filesales", "" + filename);
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-        filename = "fav" + timeStamp + ".jpg";*/
+        filename = "fav" + timeStamp + ".jpg";*//*
 
 //        UUID uuid = UUID.randomUUID();
 
@@ -290,10 +349,10 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
         values.put("_data", file.getAbsolutePath());
         ContentResolver cr = context.getContentResolver();
-        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);*/
     }
 
-    public void addToFavVideo(String filePath) {
+    /*public void addToFavVideo(String filePath) {
 
         try {
             File currentFile = new File(filePath);
@@ -331,7 +390,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /*@RequiresApi(api = Build.VERSION_CODES.Q)
     public void addToFavVideo(Bitmap bitmap, String filename){

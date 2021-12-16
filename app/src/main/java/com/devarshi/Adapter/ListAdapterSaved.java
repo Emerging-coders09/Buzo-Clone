@@ -55,6 +55,8 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
             holder.imageViewPlay.setVisibility(View.GONE);
         }
 
+
+
         holder.imageViewRounded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +66,12 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
                 context.startActivity(intent);
             }
         });
+
+        /*Intent intent1 = new Intent();
+        intent1.putExtra("position",position);
+        intent1.setAction(delete);
+        context.sendBroadcast(intent1);
+        ((StatusSaverFragment) context).finish();*/
     }
 
     @Override
@@ -74,6 +82,8 @@ public class ListAdapterSaved extends RecyclerView.Adapter<ListAdapterSaved.Save
     /*public interface RefreshAdapter{
         void refresh(int p);
     }*/
+
+
 
     @Override
     public int getItemViewType(int position) {

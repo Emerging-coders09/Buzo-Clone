@@ -9,7 +9,7 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+<!--    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>-->
 
     <application
         android:allowBackup="true"
@@ -19,6 +19,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.BuzoClone"
         android:windowSoftInputMode="stateHidden">
 

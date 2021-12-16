@@ -1,6 +1,11 @@
 package com.devarshi.buzoclone;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -9,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.devarshi.Adapter.FragmentAdapter;
+import com.devarshi.Adapter.StatusSaverImageSlideAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,6 +24,9 @@ public class StatusDownloader extends AppCompatActivity{
     TabItem statusTabItem, savedTabItem;
     ImageView imageViewBtwc;
     ViewPager viewPager;
+
+    BroadcastReceiver brDelete;
+    IntentFilter filter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,24 @@ public class StatusDownloader extends AppCompatActivity{
                 finish();
             }
         });
+
+        filter = new IntentFilter(StatusSaverImageSlideAdapter.delete);
+        //filter.addAction(StatusSaverImageSlideAdapter.delete);
+
+        brDelete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Log.d("ArrayListSize", ""+StatusSaverFragment.modelFeedArrayListStatusSaver.size());
+//                if (intent.getAction().equals("delete")){
+                int position = intent.getIntExtra("position", 0);
+                StatusSaverFragment.modelFeedArrayListStatusSaver.remove(position);
+//                listAdapterSaved.notifyItemRemoved(position);
+                StatusSaverFragment.listAdapterSaved.notifyDataSetChanged();
+//                }
+            }
+        };
+        registerReceiver(brDelete, filter);
 
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(fragmentAdapter);
