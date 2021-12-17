@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -62,16 +64,16 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> listOfVideoThumbnails = new ArrayList<>();
     ArrayList<String> listOfVideoUrls = new ArrayList<>();
 
-    int page = 1;
-
-    /*Boolean isScrolling = false;
-    int currentItems,totalItems,scrolledOutItems;*/
-    private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    boolean isScrolling = false;
+    boolean apiCalling = false;
+    int currentItems,totalItems,scrolledOutItems;
+    /*private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;*/
     /*private int visibleThreshold = 1; // trigger just one item before the end
     private int lastVisibleItem, totalItemCount;*/
 
     String vdoLoadedId = "";
+//    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
 
@@ -108,9 +110,11 @@ public class MainActivity extends AppCompatActivity {
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2, GridLayoutManager.VERTICAL, false);
                 recyclerViewVideos.setLayoutManager(gridLayoutManager);
 
+                Log.d(TAG, "onRefresh: called");
+
                 /*String[] arrayVideos = {"Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali"};
                 recyclerViewVideos.setAdapter(new videosAdapter(arrayVideos, MainActivity.this));*/
-                CallRetrofitForHomeScreenVideos();
+//                CallRetrofitForHomeScreenVideos();
                 /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
@@ -168,45 +172,166 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
 
-        CallRetrofitForHomeScreenVideos();
+        ViewCompat.setNestedScrollingEnabled(recyclerViewVideos, false);
 
-        /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        nScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                View view = (View) nScrollView.getChildAt(nScrollView.getChildCount() - 1);
+
+                int totalItems = gridLayoutManager.getItemCount();
+
+                Log.d(TAG, "onScrollChanged: Total Items" + totalItems);
+
+                int diff = (view.getBottom() - (nScrollView.getHeight() + nScrollView.getScrollY()));
+
+                if (diff == 0 && !apiCalling) {
+                    Log.d(TAG, "onScrollChanged: API fetching");
+                    apiCalling = false;
+                    progressBar.setVisibility(View.GONE);
+                    CallRetrofitForHomeScreenVideos();
+                    apiCalling = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+
+        /*nScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                    progressBar.setVisibility(View.VISIBLE);
+                    CallRetrofitForHomeScreenVideos();
+                }
+            }
+        });*/
+        /*CallRetrofitForHomeScreenVideos();
+
+        recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScrolling = true;
+                }
+            }
+
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
+//                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
+                *//*int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                if (lastVisibleItem > gridLayoutManager.getItemCount() - 6 && !apiCalling && !isScrolling) {
+
+                    apiCalling = true;
+                    isScrolling = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    CallRetrofitForHomeScreenVideos();
+                    progressBar.setVisibility(View.GONE);
+                    apiCalling = false;
+                    isScrolling = false;
+                }*//*
+
+                isScrolling = false;
+
+                currentItems = gridLayoutManager.getChildCount();
+                scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                totalItems = gridLayoutManager.getItemCount();
+
+                Log.d(TAG, "onScrolled: currentItems" + currentItems);
+                Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
+                Log.d(TAG, "onScrolled: totalItems" + totalItems);
+
+                if (!isScrolling && (currentItems + scrolledOutItems == totalItems)){
+                    Log.d(TAG, "onScrolled: API Called");
+//                    progressBar.setVisibility(View.GONE);
+                    isScrolling = true;
+                    fetchData();
+                }
+
+                *//*int totalItem = gridLayoutManager.getItemCount();
+                int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                Log.d(TAG, "onScrolled: Totalitem" + totalItem);
+                Log.d(TAG, "onScrolled: LastVisibleItem" + lastVisibleItem);
+
+                if (isScrolling && lastVisibleItem == totalItem -1){
+                    progressBar.setVisibility(View.GONE);
+                    isScrolling = true;
+                    CallRetrofitForHomeScreenVideos();
+                    progressBar.setVisibility(View.VISIBLE);
+                    isScrolling = false;
+                }*//*
+            }
+        });*/
+
+        /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                /*if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+
+                    loading = true;
+                }*//*
+            }
+
+            @Override
+            public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
 
                 if (dy > 0) { //check for scroll down
                     visibleItemCount = gridLayoutManager.getChildCount();
                     totalItemCount = gridLayoutManager.getItemCount();
                     pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
 
+                    Log.d(TAG, "onScrolled: visibleItemCount" + visibleItemCount);
+                    Log.d(TAG, "onScrolled: totalItemCount" + totalItemCount);
+                    Log.d(TAG, "onScrolled: pastVisiblesItems" + pastVisiblesItems);
+
+
                     if (loading) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            progressBar.setVisibility(View.GONE);
                             loading = false;
                             Log.v("...", "Last Item Wow !");
-                            progressBar.setVisibility(View.VISIBLE);
-                            CallRetrofitForHomeScreenVideos();
                             // Do pagination.. i.e. fetch new data
+                            CallRetrofitForHomeScreenVideos();
 
                             loading = true;
+                            progressBar.setVisibility(View.VISIBLE);
                         }
                     }
-                }
-            }
-        });*/
+                }*/
 
-//        fetchData(page,limit);
-        nScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredWidth()){
-                    progressBar.setVisibility(View.GONE);
-                    page++;
+
+                /*isScrolling = false;
+
+                currentItems = gridLayoutManager.getChildCount();
+                scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                totalItems = gridLayoutManager.getItemCount();
+
+                Log.d(TAG, "onScrolled: currentItems" + currentItems);
+                Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
+                Log.d(TAG, "onScrolled: totalItems" + totalItems);
+
+                if (isScrolling && (currentItems + scrolledOutItems == totalItems)){
+                    Log.d(TAG, "onScrolled: API Called");
                     progressBar.setVisibility(View.VISIBLE);
                     CallRetrofitForHomeScreenVideos();
-                }
-            }
-        });
+                    progressBar.setVisibility(View.GONE);
+                    isScrolling = true;
+                }*/
+//            }
+//        });
+
+//        fetchData(page,limit)
 
         /*recyclerViewVideos.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
@@ -327,16 +452,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*private void fetchData(int page,int limit){
+    private void fetchData() {
+        progressBar.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                for (int i=page; i<limit; i++){
-                    CallRetrofitForHomeScreenVideos();
-                }
+                CallRetrofitForHomeScreenVideos();
+                progressBar.setVisibility(View.GONE);
             }
-        },5000);
-    }*/
+        },2000);
+    }
 
     /*private void fetchData(){
         progressBar.setVisibility(View.VISIBLE);
@@ -354,28 +479,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void CallRetrofitForHomeScreenVideos() {
 
+        Log.d("CallRetrofit", "CallRetrofitForHomeScreenVideos: called");
+
+        apiCalling = true;
+
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<Example> call = retrofitRequestApi.PostDataIntoServer("newest",vdoLoadedId, "buzo");
+        Call<Example> call = retrofitRequestApi.PostDataIntoServer("newest", vdoLoadedId, "buzo");
 
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
 
-                vdoLoadedId = "";
-                listOfVideoUrls.clear();
+                apiCalling = false;
+
+                /*listOfVideoUrls.clear();
                 listOfVideoThumbnails.clear();
-                listOfTitles.clear();
+                listOfTitles.clear();*/
+
+                /*if (!isScrolling && response.isSuccessful()){
+                    CallRetrofitForHomeScreenVideos();
+                    isScrolling = false;
+                }*/
 
                 /*String[] arrayVideosTitles = new String[20];
                 String[] arrayVideosThumbnails = new String[arrayVideosTitles.length];*/
 
                 for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
 
-                    if (i < response.body().getData().getTemplates().size()-2){
+                    if (i < response.body().getData().getTemplates().size() - 2) {
                         vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId()).concat(",");
                     }
-                    if (i == response.body().getData().getTemplates().size()-1){
+                    if (i == response.body().getData().getTemplates().size() - 1) {
                         vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId());
                     }
                 }
@@ -388,12 +523,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: " + response.body().getData().getTemplates().get(i).getThumbUrl());
 //                    arrayVideosThumbnails[i] = response.body().getData().getTemplates().get(i).getThumbUrl();
                 }
-                recyclerViewVideos.setAdapter(new VideosAdapter(listOfTitles,listOfVideoThumbnails,listOfVideoUrls,MainActivity.this));
+                recyclerViewVideos.setAdapter(new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, MainActivity.this));
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                Log.d(TAG, "onFailure: ",t);
+                Log.d(TAG, "onFailure: ", t);
             }
         });
     }
@@ -412,8 +547,7 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(Gravity.LEFT);
             this.doubleBackToExitPressedOnce = false;
-        }
-        else if (this.doubleBackToExitPressedOnce){
+        } else if (this.doubleBackToExitPressedOnce) {
             Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
