@@ -17,7 +17,7 @@ import com.devarshi.buzoclone.videoPlayer;
 
 import java.util.ArrayList;
 
-public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.videosHolder> {
+public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosHolder> {
 
     //    Intent intent;
     Context mContext;
@@ -35,15 +35,15 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.videosHold
 
     @NonNull
     @Override
-    public videosHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public VideosHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.home_screen_video_layout, parent, false);
-        return new videosHolder(view);
+        return new VideosHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideosAdapter.videosHolder holder, int i) {
+    public void onBindViewHolder(@NonNull VideosAdapter.VideosHolder holder, int i) {
 
         holder.diwaliTextView.setText(dataForTitle.get(i));
 
@@ -69,13 +69,13 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.videosHold
         return dataForTitle.size();
     }
 
-    public class videosHolder extends RecyclerView.ViewHolder {
+    public class VideosHolder extends RecyclerView.ViewHolder {
 
         ImageView diwaliImageView;
         TextView diwaliTextView;
 
 
-        public videosHolder(@NonNull View itemView) {
+        public VideosHolder(@NonNull View itemView) {
             super(itemView);
             diwaliImageView = itemView.findViewById(R.id.imageViewDiwali);
             diwaliTextView = itemView.findViewById(R.id.textViewDiwali);
