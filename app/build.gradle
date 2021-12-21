@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.devarshi.buzoclone"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -69,4 +69,5 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
 }

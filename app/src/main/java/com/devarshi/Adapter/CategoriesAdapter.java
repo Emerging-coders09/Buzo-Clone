@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devarshi.buzoclone.R;
 
-public class categoriesAdapter extends RecyclerView.Adapter<categoriesAdapter.categoriesHolder> {
+import java.util.ArrayList;
 
-    String data[];
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.categoriesHolder> {
 
-    public categoriesAdapter(String[] data) {
-        this.data = data;
+    ArrayList<String> listData;
+
+    public CategoriesAdapter(ArrayList<String> listData) {
+        this.listData = listData;
     }
 
     @NonNull
@@ -25,20 +27,20 @@ public class categoriesAdapter extends RecyclerView.Adapter<categoriesAdapter.ca
     public categoriesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.activity_categories,parent,false);
+        View view = inflater.inflate(R.layout.layout_for_categories,parent,false);
         return new categoriesHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull categoriesAdapter.categoriesHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoriesAdapter.categoriesHolder holder, int position) {
 
-        holder.textView.setText(data[position]);
+        holder.textView.setText(listData.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return listData.size();
     }
 
     public class categoriesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

@@ -1,6 +1,7 @@
 package com.devarshi.buzoclone;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,30 +9,29 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.devarshi.Adapter.VideosAdapter;
-import com.devarshi.Adapter.categoriesAdapter;
 import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.google.android.material.navigation.NavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerViewCategories;
+//    RecyclerView recyclerViewCategories;
     RecyclerView recyclerViewVideos;
 
     NavigationView navigationView;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
-    NestedScrollView nScrollView;
+//    NestedScrollView nScrollView;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -63,13 +63,18 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> listOfVideoThumbnails = new ArrayList<>();
     ArrayList<String> listOfVideoUrls = new ArrayList<>();
 
+    ArrayList<String> listOfCategories = new ArrayList<>();
+
     boolean isScrolling = false;
     boolean apiCalling = false;
 
-    int varId = 0;
-    int currentItems,totalItems,scrolledOutItems;
-    private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    //    int varId = 0;
+    int currentItems, totalItems, scrolledOutItems;
+    private int lastVisibleItem;
+    private int visibleThreshold = 1;
+    VideosAdapter videosAdapter;
+    /*private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;*/
     /*private int visibleThreshold = 1; // trigger just one item before the end
     private int lastVisibleItem, totalItemCount;*/
 
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
 //    VideosAdapter videosAdapter;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
+//        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
         recyclerViewVideos = findViewById(R.id.recyclerViewVideos);
         navigationDrawer = findViewById(R.id.navigationDraw);
         editTextSearch = findViewById(R.id.searchEditText);
@@ -96,19 +102,17 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress);
 
-        nScrollView = findViewById(R.id.nestedScrollView);
+//        nScrollView = findViewById(R.id.nestedScrollView);
 
 //        videosAdapter = new VideosAdapter(listOfTitles,listOfVideoThumbnails,listOfVideoUrls,MainActivity.this);
 
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                String[] arrayCategories = {"Diwali", "Birthday", "Glow", "Love", "Magical", "Monsoon", "Reels", "Sad", "Search", "Spactrum", "Whatsapp"};
-                recyclerViewCategories.setAdapter(new categoriesAdapter(arrayCategories));
 
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2, GridLayoutManager.VERTICAL, false);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false);
                 recyclerViewVideos.setLayoutManager(gridLayoutManager);
 
                 Log.d(TAG, "onRefresh: called");
@@ -167,47 +171,69 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String[] arrayCategories = {"Diwali", "Birthday", "Glow", "Love", "Magical", "Monsoon", "Reels", "Sad", "Search", "Spactrum", "Whatsapp"};
-        recyclerViewCategories.setAdapter(new categoriesAdapter(arrayCategories));
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
+        videosAdapter = new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, listOfCategories, MainActivity.this);
+        recyclerViewVideos.setAdapter(videosAdapter);
 
-        recyclerViewVideos.setNestedScrollingEnabled(false);
 
-        /*CallRetrofitForHomeScreenVideos();
+        /*recyclerViewVideos.setNestedScrollingEnabled(false);
+        recyclerViewCategories.setNestedScrollingEnabled(false);*/
 
-        recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+//        hSLinearLayout.setNestedScrollingEnabled(false);
+//        nScrollView.setNestedScrollingEnabled(false);
 
+//        CallRetrofitForHomeScreenVideos();
+
+        /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int totalItems = gridLayoutManager.getItemCount();
 
-                Log.d(TAG, "onScrollChanged: Total Items " + totalItems);
+                isScrolling = true;
 
-                int diff = (recyclerViewVideos.getBottom() - (recyclerViewVideos.getHeight() + recyclerViewVideos.getScrollY()));
+                currentItems = gridLayoutManager.getChildCount();
+                scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                totalItems = gridLayoutManager.getItemCount();
 
-                if (diff == 0 && !apiCalling) {
-                    Log.d(TAG, "onScrollChanged: API fetching");
-                    apiCalling = false;
-                    progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "onScrolled: currentItems" + currentItems);
+                Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
+                Log.d(TAG, "onScrolled: totalItems" + totalItems);
+
+                if (isScrolling && (currentItems == totalItems)){
+                    isScrolling = false;
                     CallRetrofitForHomeScreenVideos();
-                    apiCalling = true;
-                    progressBar.setVisibility(View.VISIBLE);
                 }
-
             }
         });*/
 
-        nScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+        /*nScrollView.setNestedScrollingEnabled(false);
+        recyclerViewVideos.setNestedScrollingEnabled(false);*/
+//        ViewCompat.setNestedScrollingEnabled(recyclerViewVideos,false);
+
+        /*nScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-                View view = (View) nScrollView.getChildAt(nScrollView.getChildCount() - 1);
+
+                *//*int[] firstVisibleItem = layoutManagerList.findFirstVisibleItemPositions(null);
+                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
+                int[] lastVisibleItem = layoutManagerList.findLastVisibleItemPositions(null);
+                int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                totalItems = gridLayoutManager.getItemCount();
+
+                if (lastVisibleItem > totalItems - 6 && !isScrolling) {
+
+                    isScrolling = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    CallRetrofitForHomeScreenVideos();
+                    isScrolling = false;
+                    progressBar.setVisibility(View.GONE);
+                }*//*
+
+//                isScrolling = false;
+
+                View view = nScrollView.getChildAt(nScrollView.getChildCount() - 1);
 
                 int totalItems = gridLayoutManager.getItemCount();
 
@@ -216,16 +242,15 @@ public class MainActivity extends AppCompatActivity {
                 int diff = (view.getBottom() - (nScrollView.getHeight() + nScrollView.getScrollY()));
 
                 if (diff == 0 && !apiCalling) {
-                    Log.d(TAG, "onScrollChanged: API fetching");
-                    apiCalling = false;
+                    Log.d(TAG, "onScrollChanged: API Called");
                     progressBar.setVisibility(View.GONE);
+//                    isScrolling = false;
                     CallRetrofitForHomeScreenVideos();
-                    apiCalling = true;
                     progressBar.setVisibility(View.VISIBLE);
+//                    isScrolling = true;
                 }
             }
-        });
-
+        });*/
 
 
         /*nScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -237,7 +262,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });*/
-        /*CallRetrofitForHomeScreenVideos();
+        CallRetrofitForHomeScreenVideos();
+
+        recyclerViewVideos.setNestedScrollingEnabled(false);
+//        recyclerViewCategories.setNestedScrollingEnabled(false);
+//        ViewCompat.setNestedScrollingEnabled(recyclerViewVideos,false);
+//        nScrollView.setNestedScrollingEnabled(false);
 
         recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -245,17 +275,32 @@ public class MainActivity extends AppCompatActivity {
             public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                /*if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true;
-                }
+                }*/
             }
 
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                currentItems = gridLayoutManager.getChildCount();
+                scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                totalItems = gridLayoutManager.getItemCount();
+
+                Log.d(TAG, "onScrolled: currentItems" + currentItems);
+                Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
+                Log.d(TAG, "onScrolled: totalItems" + totalItems);
+
+                if (!apiCalling && (currentItems + scrolledOutItems == totalItems)){
+                    Log.d(TAG, "onScrolled: API Called");
+                    progressBar.setVisibility(View.VISIBLE);
+                    CallRetrofitForHomeScreenVideos();
+                    progressBar.setVisibility(View.GONE);
+                }
+
 //                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
-                *//*int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+                /*int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
 
                 if (lastVisibleItem > gridLayoutManager.getItemCount() - 6 && !apiCalling && !isScrolling) {
 
@@ -266,11 +311,19 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     apiCalling = false;
                     isScrolling = false;
-                }*//*
+                }*/
 
-                isScrolling = false;
+//                isScrolling = false;
 
-                currentItems = gridLayoutManager.getChildCount();
+                /*if (lastVisibleItem > videosAdapter.getItemCount() - 6 && !apiCalling) {
+
+                    apiCalling = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    CallRetrofitForHomeScreenVideos();
+//                    getVideoList(mSortBy, getLoadedIds());
+                }*/
+
+                /*currentItems = gridLayoutManager.getChildCount();
                 scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
                 totalItems = gridLayoutManager.getItemCount();
 
@@ -278,14 +331,18 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
                 Log.d(TAG, "onScrolled: totalItems" + totalItems);
 
-                if (!isScrolling && (currentItems + scrolledOutItems == totalItems)){
+                if ((currentItems + scrolledOutItems == totalItems) && !apiCalling){
                     Log.d(TAG, "onScrolled: API Called");
 //                    progressBar.setVisibility(View.GONE);
-                    isScrolling = true;
-                    fetchData();
-                }
+//                    isScrolling = true;
+                    progressBar.setVisibility(View.VISIBLE);
+//                    isScrolling = true;
+                    CallRetrofitForHomeScreenVideos();
+                    progressBar.setVisibility(View.GONE);
+//                    isScrolling = false;
+                }*/
 
-                *//*int totalItem = gridLayoutManager.getItemCount();
+                /*int totalItem = gridLayoutManager.getItemCount();
                 int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
 
                 Log.d(TAG, "onScrolled: Totalitem" + totalItem);
@@ -297,9 +354,9 @@ public class MainActivity extends AppCompatActivity {
                     CallRetrofitForHomeScreenVideos();
                     progressBar.setVisibility(View.VISIBLE);
                     isScrolling = false;
-                }*//*
+                }*/
             }
-        });*/
+        });
 
         /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -482,7 +539,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchData() {
+    /*private void fetchData() {
         progressBar.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -490,8 +547,8 @@ public class MainActivity extends AppCompatActivity {
                 CallRetrofitForHomeScreenVideos();
                 progressBar.setVisibility(View.GONE);
             }
-        },2000);
-    }
+        });
+    }*/
 
     /*private void fetchData(){
         progressBar.setVisibility(View.VISIBLE);
@@ -509,6 +566,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void CallRetrofitForHomeScreenVideos() {
 
+//        progressBar.setVisibility(View.VISIBLE);
+
+
         Log.d("CallRetrofit", "CallRetrofitForHomeScreenVideos: called");
 
         apiCalling = true;
@@ -524,6 +584,7 @@ public class MainActivity extends AppCompatActivity {
                 apiCalling = false;
 
                 ArrayList<Integer> videoIds = new ArrayList<>();
+//                int pos = 0;
 
                 /*listOfVideoUrls.clear();
                 listOfVideoThumbnails.clear();
@@ -539,29 +600,80 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
 
-                    if (i < response.body().getData().getTemplates().size()) {
+                    if (response.body() != null && i < response.body().getData().getTemplates().size()) {
                         videoIds.add(response.body().getData().getTemplates().get(i).getId());
-                        vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId()).concat(",");
+                        if (i < 20) {
+
+                            vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId()).concat(",");
+
+                            listOfTitles.add(response.body().getData().getTemplates().get(i).getTitle());
+                            listOfVideoThumbnails.add(response.body().getData().getTemplates().get(i).getThumbUrl());
+                            listOfVideoUrls.add(response.body().getData().getTemplates().get(i).getVideoUrl());
+                        }
+
+                        /*if (i == 19){
+                            listOfVideoUrls.clear();
+                            listOfVideoThumbnails.clear();
+                            listOfTitles.clear();
+
+                            videosAdapter.notifyItemRangeRemoved(0,20);
+                            videosAdapter.notifyDataSetChanged();
+                        }*/
                     }
+
                     /*if (i == response.body().getData().getTemplates().size() - 1) {
                         vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId());
                     }*/
                 }
-                Log.d(TAG, "onResponse: VideoIds " + videoIds.size());
 
+                for (int i = 0; i < response.body().getData().getCategories().size(); i++) {
+                    listOfCategories.add(response.body().getData().getCategories().get(i).getName());
+                }
 
-                for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
+                videosAdapter.notifyDataSetChanged();
+
+                /*if (!response.isSuccessful()){
+                    listOfVideoUrls.clear();
+                    listOfVideoThumbnails.clear();
+                    listOfTitles.clear();
+
+                    videosAdapter.notifyItemRangeRemoved(0,20);
+                    videosAdapter.notifyDataSetChanged();
+                }*/
+
+                Log.d(TAG, "onResponse: VideoIds " + videoIds);
+                Log.d(TAG, "onResponse: vdoLoadedId " + vdoLoadedId);
+
+                /*if (!response.isSuccessful()) {
+                    listOfTitles.clear();
+                    listOfVideoThumbnails.clear();
+                    listOfVideoUrls.clear();
+                    videoIds.clear();
+                }*/
+
+                /*for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
                     listOfTitles.add(response.body().getData().getTemplates().get(i).getTitle());
                     listOfVideoThumbnails.add(response.body().getData().getTemplates().get(i).getThumbUrl());
                     listOfVideoUrls.add(response.body().getData().getTemplates().get(i).getVideoUrl());
-
+                    pos++;
 //                    arrayVideosTitles[i] = response.body().getData().getTemplates().get(i).getTitle();
 //                    arrayVideosThumbnails[i] = response.body().getData().getTemplates().get(i).getThumbUrl();
                 }
-                VideosAdapter videosAdapter = new VideosAdapter(listOfTitles,listOfVideoThumbnails,listOfVideoUrls,MainActivity.this);
+                Log.d(TAG, "onResponse: position " + pos);
+
+                VideosAdapter videosAdapter = new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, MainActivity.this);
                 recyclerViewVideos.setAdapter(videosAdapter);
-                videoIds.clear();
-                videosAdapter.notifyDataSetChanged();
+                videosAdapter.notifyDataSetChanged();*/
+
+                /*if (!response.isSuccessful()){
+                    listOfVideoUrls.clear();
+                    listOfVideoThumbnails.clear();
+                    listOfTitles.clear();
+
+                    videosAdapter.notifyItemRangeRemoved(0,20);
+                    videosAdapter.notifyDataSetChanged();
+                }*/
+//                progressBar.setVisibility(View.GONE);
             }
 
             @Override
