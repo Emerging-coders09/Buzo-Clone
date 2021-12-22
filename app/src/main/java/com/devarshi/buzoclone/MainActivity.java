@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,6 +28,7 @@ import com.devarshi.Adapter.VideosAdapter;
 import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> listOfVideoThumbnails = new ArrayList<>();
     ArrayList<String> listOfVideoUrls = new ArrayList<>();
 
-    ArrayList<String> listOfCategories = new ArrayList<>();
+    ArrayList<String> listOfCategoriesTitles = new ArrayList<>();
+    ArrayList<String> listOfCategoriesImgs = new ArrayList<>();
+
+    FloatingActionButton fab;
 
     boolean isScrolling = false;
     boolean apiCalling = false;
@@ -88,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 
         setContentView(R.layout.activity_main);
 
@@ -102,25 +105,44 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress);
 
+        fab = findViewById(R.id.floatingActionButton);
+
 //        nScrollView = findViewById(R.id.nestedScrollView);
 
 //        videosAdapter = new VideosAdapter(listOfTitles,listOfVideoThumbnails,listOfVideoUrls,MainActivity.this);
 
 //        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+//        swipeRefreshLayout.setNestedScrollingEnabled(false);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1, GridLayoutManager.VERTICAL, false);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this,2,GridLayoutManager.VERTICAL,false);
+                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        if (position == 0){
+                            return 2;
+                        }
+                        else {
+                            return 1;
+
+                        }
+                    }
+                });
                 recyclerViewVideos.setLayoutManager(gridLayoutManager);
+                swipeRefreshLayout.setRefreshing(false);
+
+                CallRetrofitForHomeScreenVideos();
 
                 Log.d(TAG, "onRefresh: called");
 
                 /*String[] arrayVideos = {"Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali"};
-                recyclerViewVideos.setAdapter(new videosAdapter(arrayVideos, MainActivity.this));*/
+                recyclerViewVideos.setAdapter(new videosAdapter(arrayVideos, MainActivity.this));
 //                CallRetrofitForHomeScreenVideos();
-                /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
@@ -142,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
                             fetchData();
                         }
                     }
-                });*/
+                });
                 swipeRefreshLayout.setRefreshing(false);
 
-                /*recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
@@ -171,9 +193,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
+//        swipeRefreshLayout.setRefreshing(false);
+
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 0){
+                    return 2;
+                }
+                else {
+                    return 1;
+                }
+            }
+        });
+
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
-        videosAdapter = new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, listOfCategories, MainActivity.this);
+        videosAdapter = new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, listOfCategoriesTitles, listOfCategoriesImgs,MainActivity.this);
         recyclerViewVideos.setAdapter(videosAdapter);
 
 
@@ -264,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
         CallRetrofitForHomeScreenVideos();
 
-        recyclerViewVideos.setNestedScrollingEnabled(false);
+//        recyclerViewVideos.setNestedScrollingEnabled(false);
 //        recyclerViewCategories.setNestedScrollingEnabled(false);
 //        ViewCompat.setNestedScrollingEnabled(recyclerViewVideos,false);
 //        nScrollView.setNestedScrollingEnabled(false);
@@ -292,11 +329,26 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
                 Log.d(TAG, "onScrolled: totalItems" + totalItems);
 
+                if (scrolledOutItems > 5){
+                    fab.show();
+                    fab.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            recyclerViewVideos.smoothScrollToPosition(0);
+//                            gridLayoutManager.scrollToPosition(0);
+                        }
+                    });
+                }
+                else {
+                    fab.hide();
+                }
+
                 if (!apiCalling && (currentItems + scrolledOutItems == totalItems)){
                     Log.d(TAG, "onScrolled: API Called");
-                    progressBar.setVisibility(View.VISIBLE);
                     CallRetrofitForHomeScreenVideos();
-                    progressBar.setVisibility(View.GONE);
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    progressBar.setVisibility(View.GONE);
                 }
 
 //                int firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition();
@@ -566,8 +618,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void CallRetrofitForHomeScreenVideos() {
 
-//        progressBar.setVisibility(View.VISIBLE);
-
+        progressBar.setVisibility(View.VISIBLE);
 
         Log.d("CallRetrofit", "CallRetrofitForHomeScreenVideos: called");
 
@@ -627,7 +678,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 for (int i = 0; i < response.body().getData().getCategories().size(); i++) {
-                    listOfCategories.add(response.body().getData().getCategories().get(i).getName());
+                    listOfCategoriesTitles.add(response.body().getData().getCategories().get(i).getName());
+                    listOfCategoriesImgs.add(response.body().getData().getCategories().get(i).getImageUrl());
                 }
 
                 videosAdapter.notifyDataSetChanged();
@@ -673,7 +725,9 @@ public class MainActivity extends AppCompatActivity {
                     videosAdapter.notifyItemRangeRemoved(0,20);
                     videosAdapter.notifyDataSetChanged();
                 }*/
-//                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+//                swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

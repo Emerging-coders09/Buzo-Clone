@@ -9,12 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.R;
-import com.devarshi.buzoclone.videoPlayer;
+import com.devarshi.buzoclone.VideoPlayer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +24,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     //    Intent intent;
 
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_POST = 1;
+    public static final int TYPE_CAT_RECYCLER_VIEW = 0;
+    public static final int TYPE_VID_RECYCLER_VIEW = 1;
 
     Context mContext;
 
@@ -33,25 +33,28 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     ArrayList<String> dataForVideoThumbnails;
     ArrayList<String> dataForVideoUrls;
 
-    ArrayList<String> listData;
+    ArrayList<String> dataForCategoriesTitles;
+    ArrayList<String> dataForCategoriesThumbnails;
 
-    public VideosAdapter(ArrayList<String> dataForTitle, ArrayList<String> dataForVideoThumbnails, ArrayList<String> dataForVideoUrls, ArrayList<String> listData, Context mContext) {
+
+    public VideosAdapter(ArrayList<String> dataForTitle, ArrayList<String> dataForVideoThumbnails, ArrayList<String> dataForVideoUrls, ArrayList<String> dataForCategoriesTitles, ArrayList<String> dataForCategoriesThumbnails, Context mContext) {
         this.dataForTitle = dataForTitle;
         this.dataForVideoThumbnails = dataForVideoThumbnails;
         this.dataForVideoUrls = dataForVideoUrls;
         this.mContext = mContext;
-        this.listData = listData;
+        this.dataForCategoriesTitles = dataForCategoriesTitles;
+        this.dataForCategoriesThumbnails = dataForCategoriesThumbnails;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == TYPE_HEADER) {
+        if (viewType == TYPE_CAT_RECYCLER_VIEW) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View view = layoutInflater.inflate(R.layout.categories_recycler_view_layout, parent, false);
             return new CategoriesHolder(view);
-        } else if (viewType == TYPE_POST) {
+        } else if (viewType == TYPE_VID_RECYCLER_VIEW) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View view = layoutInflater.inflate(R.layout.home_screen_video_layout, parent, false);
             return new VideosHolder(view);
@@ -65,23 +68,42 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (holder instanceof CategoriesHolder) {
             //set adapter for the horizontal recycler view
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(((CategoriesHolder) holder).recyclerViewCat.getContext(), 1, GridLayoutManager.HORIZONTAL,false);
-            ((CategoriesHolder) holder).recyclerViewCat.setLayoutManager(gridLayoutManager);
+//            GridLayoutManager gridLayoutManager = new GridLayoutManager(((CategoriesHolder) holder).recyclerViewCat.getContext(), 1, GridLayoutManager.HORIZONTAL,false);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(((CategoriesHolder)holder).recyclerViewCat.getContext(),LinearLayoutManager.HORIZONTAL,false);
+            ((CategoriesHolder)holder).recyclerViewCat.setLayoutManager(linearLayoutManager);
+
+            /*GridLayoutManager gridLayoutManager = new GridLayoutManager(((CategoriesHolder) holder).recyclerViewCat.getContext(),2);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position == TYPE_CAT_RECYCLER_VIEW){
+                        return 1;
+                    }
+                    else {
+                        return 2;
+                    }
+                }
+            });*/
+            ((CategoriesHolder) holder).recyclerViewCat.setLayoutManager(linearLayoutManager);
 
             if (((CategoriesHolder) holder).recyclerViewCat.getAdapter() == null) { //only create the adapter the first time. the following times update the values
-                CategoriesAdapter adapter = new CategoriesAdapter(listData);
+                CategoriesAdapter adapter = new CategoriesAdapter(dataForCategoriesTitles,dataForCategoriesThumbnails,mContext);
                 ((CategoriesHolder) holder).recyclerViewCat.setAdapter(adapter);
             } else {
                 ((CategoriesHolder) holder).recyclerViewCat.getAdapter().notifyDataSetChanged();
             }
         }
         else if (holder instanceof VideosHolder) {
+
             Glide.with(mContext).load(dataForVideoThumbnails.get(i)).into(((VideosHolder)holder).diwaliImageView);
+
+            ((VideosHolder)holder).diwaliTextView.setText(dataForTitle.get(i));
 
             ((VideosHolder)holder).diwaliImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, videoPlayer.class);
+                    Intent intent = new Intent(mContext, VideoPlayer.class);
                     intent.putExtra("dataForVideoUrls", dataForVideoUrls.get(i));
                     mContext.startActivity(intent);
                 }
@@ -91,7 +113,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? TYPE_HEADER : TYPE_POST;
+        return position == 0 ? TYPE_CAT_RECYCLER_VIEW : TYPE_VID_RECYCLER_VIEW;
     }
 
     @Override

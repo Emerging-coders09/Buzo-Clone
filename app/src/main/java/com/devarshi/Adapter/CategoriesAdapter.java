@@ -1,5 +1,6 @@
 package com.devarshi.Adapter;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devarshi.buzoclone.R;
 
 import java.util.ArrayList;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.categoriesHolder> {
 
-    ArrayList<String> listData;
+    ArrayList<String> dataForCatTitles;
+    ArrayList<String> dataForCatImages;
+    Context mContext;
 
-    public CategoriesAdapter(ArrayList<String> listData) {
-        this.listData = listData;
+    public CategoriesAdapter(ArrayList<String> dataForCatTitles,ArrayList<String> dataForCatImages, Context mContext) {
+        this.dataForCatTitles = dataForCatTitles;
+        this.dataForCatImages = dataForCatImages;
+        this.mContext = mContext;
     }
 
     @NonNull
@@ -34,13 +40,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ca
     @Override
     public void onBindViewHolder(@NonNull CategoriesAdapter.categoriesHolder holder, int position) {
 
-        holder.textView.setText(listData.get(position));
+        Glide.with(mContext).load(dataForCatImages.get(position)).into(holder.imageView);
+
+        holder.textView.setText(dataForCatTitles.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return listData.size();
+        return dataForCatTitles.size();
     }
 
     public class categoriesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

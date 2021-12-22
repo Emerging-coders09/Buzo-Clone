@@ -2,7 +2,6 @@ package com.devarshi.buzoclone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,29 +10,33 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerView;
 
-public class videoPlayer extends AppCompatActivity {
+public class VideoPlayer extends AppCompatActivity {
 
     //    DoubleTapPlayerView playerView;
     ExoPlayer player;
     PlayerView playerView;
     String singleURL = null;
+
+//    ProgressBar progressBarVideo;
 //    YouTubeOverlay ytOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 
         setContentView(R.layout.activity_video_player);
 
         playerView = findViewById(R.id.previewPlayerView);
+
+//        progressBarVideo = findViewById(R.id.videoPb);
 //        ytOverlay = findViewById(R.id.ytOverlay);
 
         playerView.setBackgroundColor(this.getResources().getColor(android.R.color.black));
 
-        player = new ExoPlayer.Builder(videoPlayer.this).build();
+        player = new ExoPlayer.Builder(VideoPlayer.this).build();
 
         Intent intent = getIntent();
 
@@ -45,6 +48,15 @@ public class videoPlayer extends AppCompatActivity {
         playerView.setPlayer(player);
 //        ytOverlay.player(player);
         player.prepare();
+
+        /*if (player.isLoading()){
+            progressBarVideo.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressBarVideo.setVisibility(View.GONE);
+        }*/
+
+
         player.play();
 //        initDoubleTapPlayerView();
     }

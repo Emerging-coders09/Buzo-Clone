@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".videoPlayer">
+    tools:context=".VideoPlayer">
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -19,7 +19,6 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/previewPlayerView"
             android:layout_width="match_parent"
-            app:controller_layout_id="@layout/exo_playback_control_view_yt"
             android:layout_height="match_parent"/>
 
     </FrameLayout>
