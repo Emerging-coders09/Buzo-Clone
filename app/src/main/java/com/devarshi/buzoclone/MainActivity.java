@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -50,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     DrawerLayout drawerLayout;
     CardView navigationDrawer;
-    CardView cardViewWhatsapp;
-    EditText editTextSearch;
+    CardView whatsAppCardView;
+    CardView searchCardView;
+//    EditText editTextSearch;
 
     ProgressBar progressBar;
 
@@ -68,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton fab;
 
-    boolean isScrolling = false;
+//    boolean isScrolling = false;
     boolean apiCalling = false;
 
     //    int varId = 0;
     int currentItems, totalItems, scrolledOutItems;
-    private int lastVisibleItem;
-    private int visibleThreshold = 1;
+    /*private int lastVisibleItem;
+    private int visibleThreshold = 1;*/
     VideosAdapter videosAdapter;
     /*private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;*/
@@ -99,13 +99,24 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
         recyclerViewVideos = findViewById(R.id.recyclerViewVideos);
         navigationDrawer = findViewById(R.id.navigationDraw);
-        editTextSearch = findViewById(R.id.searchEditText);
-        cardViewWhatsapp = findViewById(R.id.whatsappCardView);
+//        editTextSearch = findViewById(R.id.searchEditText);
+        whatsAppCardView = findViewById(R.id.whatsappCardView);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
 
         progressBar = findViewById(R.id.progress);
 
         fab = findViewById(R.id.floatingActionButton);
+
+        searchCardView = findViewById(R.id.cardViewSearch);
+
+        searchCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_top,0);
+            }
+        });
 
 //        nScrollView = findViewById(R.id.nestedScrollView);
 
@@ -115,82 +126,80 @@ public class MainActivity extends AppCompatActivity {
 
 //        swipeRefreshLayout.setNestedScrollingEnabled(false);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
 
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this,2,GridLayoutManager.VERTICAL,false);
-                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        if (position == 0){
-                            return 2;
-                        }
-                        else {
-                            return 1;
-
-                        }
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this,2,GridLayoutManager.VERTICAL,false);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position == 0){
+                        return 2;
                     }
-                });
-                recyclerViewVideos.setLayoutManager(gridLayoutManager);
-                swipeRefreshLayout.setRefreshing(false);
+                    else {
+                        return 1;
 
-                CallRetrofitForHomeScreenVideos();
+                    }
+                }
+            });
 
-                Log.d(TAG, "onRefresh: called");
+            recyclerViewVideos.setLayoutManager(gridLayoutManager);
+            swipeRefreshLayout.setRefreshing(false);
 
-                /*String[] arrayVideos = {"Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali"};
-                recyclerViewVideos.setAdapter(new videosAdapter(arrayVideos, MainActivity.this));
+            CallRetrofitForHomeScreenVideos();
+
+            Log.d(TAG, "onRefresh: called");
+
+            /*String[] arrayVideos = {"Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali", "Diwali"};
+            recyclerViewVideos.setAdapter(new videosAdapter(arrayVideos, MainActivity.this));
 //                CallRetrofitForHomeScreenVideos();
-                recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                            isScrolling = true;
-                        }
+            recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                        isScrolling = true;
                     }
+                }
 
-                    @Override
-                    public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
+                @Override
+                public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
 
-                        currentItems = gridLayoutManager.getChildCount();
-                        totalItems = gridLayoutManager.getItemCount();
-                        scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                    currentItems = gridLayoutManager.getChildCount();
+                    totalItems = gridLayoutManager.getItemCount();
+                    scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
 
-                        if (isScrolling && (currentItems + scrolledOutItems == totalItems)){
-                            isScrolling = false;
-                            fetchData();
-                        }
+                    if (isScrolling && (currentItems + scrolledOutItems == totalItems)){
+                        isScrolling = false;
+                        fetchData();
                     }
-                });
-                swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+            swipeRefreshLayout.setRefreshing(false);
 
-                recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                            isScrolling = true;
-                        }
+            recyclerViewVideos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                        isScrolling = true;
                     }
+                }
 
-                    @Override
-                    public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
+                @Override
+                public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
 
-                        currentItems = gridLayoutManager.getChildCount();
-                        totalItems = gridLayoutManager.getItemCount();
-                        scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                    currentItems = gridLayoutManager.getChildCount();
+                    totalItems = gridLayoutManager.getItemCount();
+                    scrolledOutItems = gridLayoutManager.findFirstVisibleItemPosition();
 
-                        if (isScrolling && (currentItems + scrolledOutItems == totalItems)){
-                            isScrolling = false;
-                            fetchData();
-                        }
+                    if (isScrolling && (currentItems + scrolledOutItems == totalItems)){
+                        isScrolling = false;
+                        fetchData();
                     }
-                });*/
-            }
+                }
+            });*/
         });
 
 //        swipeRefreshLayout.setRefreshing(false);
@@ -582,7 +591,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        cardViewWhatsapp.setOnClickListener(new View.OnClickListener() {
+        whatsAppCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WhatsAppCardView.class);

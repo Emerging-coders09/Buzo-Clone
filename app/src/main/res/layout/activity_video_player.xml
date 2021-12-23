@@ -19,7 +19,26 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/previewPlayerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:use_controller="false"/>
+
+        <ImageView
+            android:id="@+id/iVPlay"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/playbutton"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:tint="@color/white"/>
+
+        <ProgressBar
+            android:id="@+id/videoPb"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:indeterminateTint="@color/white"
+            android:alpha="0.6"/>
 
     </FrameLayout>
 

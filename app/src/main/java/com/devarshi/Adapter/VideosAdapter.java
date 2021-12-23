@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +37,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     ArrayList<String> dataForCategoriesTitles;
     ArrayList<String> dataForCategoriesThumbnails;
+
+    int lastPosition = -1;
 
 
     public VideosAdapter(ArrayList<String> dataForTitle, ArrayList<String> dataForVideoThumbnails, ArrayList<String> dataForVideoUrls, ArrayList<String> dataForCategoriesTitles, ArrayList<String> dataForCategoriesThumbnails, Context mContext) {
@@ -69,6 +73,12 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof CategoriesHolder) {
             //set adapter for the horizontal recycler view
 //            GridLayoutManager gridLayoutManager = new GridLayoutManager(((CategoriesHolder) holder).recyclerViewCat.getContext(), 1, GridLayoutManager.HORIZONTAL,false);
+
+            if (holder.getAdapterPosition()>lastPosition){
+                Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.slide_in_left);
+                ((CategoriesHolder)holder).recyclerViewCat.setAnimation(animation);
+                lastPosition = holder.getAdapterPosition();
+            }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(((CategoriesHolder)holder).recyclerViewCat.getContext(),LinearLayoutManager.HORIZONTAL,false);
             ((CategoriesHolder)holder).recyclerViewCat.setLayoutManager(linearLayoutManager);

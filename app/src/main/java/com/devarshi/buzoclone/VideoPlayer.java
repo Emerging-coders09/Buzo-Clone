@@ -2,6 +2,10 @@ package com.devarshi.buzoclone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +21,12 @@ public class VideoPlayer extends AppCompatActivity {
     PlayerView playerView;
     String singleURL = null;
 
+    ProgressBar progressBarVideo;
+
+    boolean isPlaying = true;
+
+    ImageView imageViewPlay;
+
 //    ProgressBar progressBarVideo;
 //    YouTubeOverlay ytOverlay;
 
@@ -30,6 +40,9 @@ public class VideoPlayer extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
 
         playerView = findViewById(R.id.previewPlayerView);
+
+        progressBarVideo = findViewById(R.id.videoPb);
+        imageViewPlay = findViewById(R.id.iVPlay);
 
 //        progressBarVideo = findViewById(R.id.videoPb);
 //        ytOverlay = findViewById(R.id.ytOverlay);
@@ -49,13 +62,37 @@ public class VideoPlayer extends AppCompatActivity {
 //        ytOverlay.player(player);
         player.prepare();
 
-        /*if (player.isLoading()){
-            progressBarVideo.setVisibility(View.VISIBLE);
-        }
-        else {
-            progressBarVideo.setVisibility(View.GONE);
-        }*/
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
+                if (playbackState == Player.STATE_BUFFERING){
+                    progressBarVideo.setVisibility(View.VISIBLE);
+                }
+                else {
+                    progressBarVideo.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        playerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (isPlaying){
+                    onPause();
+                    imageViewPlay.setVisibility(View.VISIBLE);
+                    isPlaying = false;
+                }
+                else {
+                    imageViewPlay.setVisibility(View.GONE);
+                    player.play();
+                    isPlaying = true;
+                }
+
+                return false;
+            }
+        });
 
         player.play();
 //        initDoubleTapPlayerView();
@@ -107,7 +144,6 @@ public class VideoPlayer extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
         if (player.getPlaybackState() == Player.STATE_READY && player.getPlayWhenReady()) {
             player.play();
         }

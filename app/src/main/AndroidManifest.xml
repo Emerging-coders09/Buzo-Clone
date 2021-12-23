@@ -5,11 +5,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-
-<!--    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>-->
 
     <application
         android:allowBackup="true"
@@ -19,18 +18,19 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.BuzoClone"
+        android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateHidden">
-
-        <!--<receiver android:name=".StatusSaverFragment$MyBroadCastReceiver"
+        <activity android:name=".SearchActivity"></activity>
+        <!--
+        <receiver android:name=".StatusSaverFragment$MyBroadCastReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
                 <action android:name="delete"/>
             </intent-filter>
-        </receiver>-->
-
+        </receiver>
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.devarshi.buzoclone.provider"
@@ -40,30 +40,31 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        
-        <activity android:name=".StatusSaverActivity"
-            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".StatusSaverActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StatusViewerActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".StatusDownloader"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".WhatsAppCardView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".VideoPlayer"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
