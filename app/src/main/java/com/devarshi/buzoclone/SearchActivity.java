@@ -63,7 +63,7 @@ public class SearchActivity extends AppCompatActivity {
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<Example> call = retrofitRequestApi.PostDataIntoServer("newest","","buzo");
+        Call<Example> call = retrofitRequestApi.PostDataIntoServerForHsVideos("newest","","buzo");
 
         call.enqueue(new Callback<Example>() {
             @Override

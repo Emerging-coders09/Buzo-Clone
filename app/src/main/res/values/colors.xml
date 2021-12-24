@@ -15,5 +15,8 @@
 
     <color name="green">#09A21D</color>
 
+    <color name="classifyCardViewColor">#E24444</color>
+
+
 
 </resources>

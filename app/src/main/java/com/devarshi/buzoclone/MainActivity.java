@@ -24,9 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.devarshi.Adapter.VideosAdapter;
+import com.devarshi.Retrofitclient.Category;
 import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
+import com.devarshi.Retrofitclient.Template;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -59,12 +61,17 @@ public class MainActivity extends AppCompatActivity {
 
     SwipeRefreshLayout swipeRefreshLayout;
 
-    ArrayList<String> listOfTitles = new ArrayList<>();
+    /*ArrayList<String> listOfTitles = new ArrayList<>();
     ArrayList<String> listOfVideoThumbnails = new ArrayList<>();
     ArrayList<String> listOfVideoUrls = new ArrayList<>();
 
     ArrayList<String> listOfCategoriesTitles = new ArrayList<>();
-    ArrayList<String> listOfCategoriesImgs = new ArrayList<>();
+    ArrayList<String> listOfCategoriesImgs = new ArrayList<>();*/
+
+//    ArrayList<Data> listOfItemsFromData = new ArrayList<Data>();
+
+    ArrayList<Template> listOfTempItems = new ArrayList<>();
+    ArrayList<Category> listOfCatItems = new ArrayList<>();
 
     FloatingActionButton fab;
 
@@ -82,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
     private int lastVisibleItem, totalItemCount;*/
 
     String vdoLoadedId = "";
+
+    Intent intent;
 //    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
@@ -112,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         searchCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                intent = new Intent(MainActivity.this,SearchActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_top,0);
             }
@@ -219,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
-        videosAdapter = new VideosAdapter(listOfTitles, listOfVideoThumbnails, listOfVideoUrls, listOfCategoriesTitles, listOfCategoriesImgs,MainActivity.this);
+        videosAdapter = new VideosAdapter(listOfTempItems,listOfCatItems,MainActivity.this);
         recyclerViewVideos.setAdapter(videosAdapter);
 
 
@@ -594,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
         whatsAppCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, WhatsAppCardView.class);
+                intent = new Intent(MainActivity.this, WhatsAppCardView.class);
                 startActivity(intent);
             }
         });
@@ -635,7 +644,7 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<Example> call = retrofitRequestApi.PostDataIntoServer("newest", vdoLoadedId, "buzo");
+        Call<Example> call = retrofitRequestApi.PostDataIntoServerForHsVideos("newest", vdoLoadedId, "buzo");
 
         call.enqueue(new Callback<Example>() {
             @Override
@@ -666,9 +675,11 @@ public class MainActivity extends AppCompatActivity {
 
                             vdoLoadedId += String.valueOf(response.body().getData().getTemplates().get(i).getId()).concat(",");
 
-                            listOfTitles.add(response.body().getData().getTemplates().get(i).getTitle());
+                            /*listOfTitles.add(response.body().getData().getTemplates().get(i).getTitle());
                             listOfVideoThumbnails.add(response.body().getData().getTemplates().get(i).getThumbUrl());
-                            listOfVideoUrls.add(response.body().getData().getTemplates().get(i).getVideoUrl());
+                            listOfVideoUrls.add(response.body().getData().getTemplates().get(i).getVideoUrl());*/
+
+                            listOfTempItems.add(response.body().getData().getTemplates().get(i));
                         }
 
                         /*if (i == 19){
@@ -687,8 +698,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 for (int i = 0; i < response.body().getData().getCategories().size(); i++) {
-                    listOfCategoriesTitles.add(response.body().getData().getCategories().get(i).getName());
-                    listOfCategoriesImgs.add(response.body().getData().getCategories().get(i).getImageUrl());
+                    listOfCatItems.add(response.body().getData().getCategories().get(i));
                 }
 
                 videosAdapter.notifyDataSetChanged();
@@ -793,5 +803,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
-
 }

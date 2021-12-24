@@ -23,8 +23,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
         <!--<androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/categoriesConstraintLayout"
@@ -101,29 +101,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:visibility="gone"
                     android:indeterminateTint="@color/black"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
+                    app:fabCustomSize="40dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:src="@drawable/ic_baseline_arrow_upward_24"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:backgroundTint="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
                 </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
@@ -138,6 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:visibility="gone"
         app:headerLayout="@layout/navheader"
         app:menu="@menu/iconmenu">
 
@@ -198,10 +201,11 @@
 
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="25dp"
                     android:layout_height="40dp"
                     android:layout_gravity="right"
-                    android:src="@drawable/search">
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_search">
 
                 </ImageView>
 

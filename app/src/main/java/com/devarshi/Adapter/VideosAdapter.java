@@ -11,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devarshi.Retrofitclient.Category;
+import com.devarshi.Retrofitclient.Template;
 import com.devarshi.buzoclone.R;
 import com.devarshi.buzoclone.VideoPlayer;
 
@@ -31,23 +34,30 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     Context mContext;
 
-    ArrayList<String> dataForTitle;
+    /*ArrayList<String> dataForTitle;
     ArrayList<String> dataForVideoThumbnails;
     ArrayList<String> dataForVideoUrls;
 
     ArrayList<String> dataForCategoriesTitles;
-    ArrayList<String> dataForCategoriesThumbnails;
+    ArrayList<String> dataForCategoriesThumbnails;*/
+
+//    ArrayList<Data> dataForTemplateItems;
+
+    ArrayList<Category> dataForCatItems;
+    ArrayList<Template> dataForTempItems;
 
     int lastPosition = -1;
 
 
-    public VideosAdapter(ArrayList<String> dataForTitle, ArrayList<String> dataForVideoThumbnails, ArrayList<String> dataForVideoUrls, ArrayList<String> dataForCategoriesTitles, ArrayList<String> dataForCategoriesThumbnails, Context mContext) {
-        this.dataForTitle = dataForTitle;
+    public VideosAdapter(ArrayList<Template> dataForTempItems, ArrayList<Category> dataForCatItems, Context mContext) {
+        /*this.dataForTitle = dataForTitle;
         this.dataForVideoThumbnails = dataForVideoThumbnails;
-        this.dataForVideoUrls = dataForVideoUrls;
+        this.dataForVideoUrls = dataForVideoUrls;*/
+        this.dataForTempItems = dataForTempItems;
+        this.dataForCatItems = dataForCatItems;
         this.mContext = mContext;
-        this.dataForCategoriesTitles = dataForCategoriesTitles;
-        this.dataForCategoriesThumbnails = dataForCategoriesThumbnails;
+        /*this.dataForCategoriesTitles = dataForCategoriesTitles;
+        this.dataForCategoriesThumbnails = dataForCategoriesThumbnails;*/
     }
 
     @NonNull
@@ -98,7 +108,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((CategoriesHolder) holder).recyclerViewCat.setLayoutManager(linearLayoutManager);
 
             if (((CategoriesHolder) holder).recyclerViewCat.getAdapter() == null) { //only create the adapter the first time. the following times update the values
-                CategoriesAdapter adapter = new CategoriesAdapter(dataForCategoriesTitles,dataForCategoriesThumbnails,mContext);
+                CategoriesAdapter adapter = new CategoriesAdapter(dataForCatItems,mContext);
                 ((CategoriesHolder) holder).recyclerViewCat.setAdapter(adapter);
             } else {
                 ((CategoriesHolder) holder).recyclerViewCat.getAdapter().notifyDataSetChanged();
@@ -106,15 +116,52 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         else if (holder instanceof VideosHolder) {
 
-            Glide.with(mContext).load(dataForVideoThumbnails.get(i)).into(((VideosHolder)holder).diwaliImageView);
+            Glide.with(mContext).load(dataForTempItems.get(i).getThumbUrl()).into(((VideosHolder)holder).hSVideoImageView);
 
-            ((VideosHolder)holder).diwaliTextView.setText(dataForTitle.get(i));
+            ((VideosHolder)holder).hSVideoTextView.setText(dataForTempItems.get(i).getTitle());
 
-            ((VideosHolder)holder).diwaliImageView.setOnClickListener(new View.OnClickListener() {
+//            GradientDrawable drawable = (GradientDrawable) ContextCompat.getDrawable(mContext, R.drawable.tags_rounded_corners).mutate();
+
+            if (dataForTempItems.get(i).getIsHot() && dataForTempItems.get(i).getIsNew()){
+
+                ((VideosHolder) holder).classifyCardView.setVisibility(View.VISIBLE);
+//                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);
+
+                ((VideosHolder) holder).classifyCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
+                /*drawable.setColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
+                ((VideosHolder) holder).classifyCardView.setBackground(drawable);*/
+                ((VideosHolder) holder).classifyTextView.setText("HOT");
+            }
+            else if (dataForTempItems.get(i).getIsHot() && !dataForTempItems.get(i).getIsNew()){
+
+                ((VideosHolder) holder).classifyCardView.setVisibility(View.VISIBLE);
+//                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);
+
+                ((VideosHolder) holder).classifyCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
+                /*drawable.setColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
+                ((VideosHolder) holder).classifyCardView.setBackground(drawable);*/
+                ((VideosHolder) holder).classifyTextView.setText("HOT");
+            }
+            else if (!dataForTempItems.get(i).getIsHot() && dataForTempItems.get(i).getIsNew()){
+
+                ((VideosHolder) holder).classifyCardView.setVisibility(View.VISIBLE);
+//                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);
+
+                ((VideosHolder) holder).classifyCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.skyBlue));
+                /*drawable.setColor(mContext.getResources().getColor(R.color.skyBlue));
+                ((VideosHolder) holder).classifyCardView.setBackground(drawable);*/
+                ((VideosHolder) holder).classifyTextView.setText("NEW");
+            }
+            /*else if (!dataForTempItems.get(i).getIsHot() && !dataForTempItems.get(i).getIsNew()){
+                ((VideosHolder) holder).classifyCardView.setVisibility(View.GONE);
+                ((VideosHolder) holder).classifyTextView.setVisibility(View.GONE);
+            }*/
+
+            ((VideosHolder)holder).hSVideoImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, VideoPlayer.class);
-                    intent.putExtra("dataForVideoUrls", dataForVideoUrls.get(i));
+                    intent.putExtra("dataForVideoUrls", dataForTempItems.get(i).getVideoUrl());
                     mContext.startActivity(intent);
                 }
             });
@@ -128,19 +175,25 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return dataForTitle.size();
+        return dataForTempItems.size();
     }
 
-    public class VideosHolder extends RecyclerView.ViewHolder {
+    public static class VideosHolder extends RecyclerView.ViewHolder {
 
-        ImageView diwaliImageView;
-        TextView diwaliTextView;
+        ImageView hSVideoImageView;
+        TextView hSVideoTextView;
+
+        CardView classifyCardView;
+        TextView classifyTextView;
 
 
         public VideosHolder(@NonNull View itemView) {
             super(itemView);
-            diwaliImageView = itemView.findViewById(R.id.imageViewDiwali);
-            diwaliTextView = itemView.findViewById(R.id.textViewDiwali);
+            hSVideoImageView = itemView.findViewById(R.id.imageViewDiwali);
+            hSVideoTextView = itemView.findViewById(R.id.textViewDiwali);
+
+            classifyCardView = itemView.findViewById(R.id.cVClassify);
+            classifyTextView = itemView.findViewById(R.id.tVClassify);
 //            itemView.setOnClickListener(this);
         }
 
@@ -151,7 +204,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }*/
     }
 
-    public class CategoriesHolder extends RecyclerView.ViewHolder {
+    public static class CategoriesHolder extends RecyclerView.ViewHolder {
 
         RecyclerView recyclerViewCat;
 

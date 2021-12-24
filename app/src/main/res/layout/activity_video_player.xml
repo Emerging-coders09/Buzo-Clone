@@ -40,6 +40,17 @@
             android:indeterminateTint="@color/white"
             android:alpha="0.6"/>
 
+        <ImageView
+            android:id="@+id/hSVideoBackButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="18dp"
+            android:src="@drawable/backbutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

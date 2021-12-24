@@ -26,6 +26,7 @@ public class VideoPlayer extends AppCompatActivity {
     boolean isPlaying = true;
 
     ImageView imageViewPlay;
+    ImageView imageViewHsVideoBb;
 
 //    ProgressBar progressBarVideo;
 //    YouTubeOverlay ytOverlay;
@@ -43,6 +44,8 @@ public class VideoPlayer extends AppCompatActivity {
 
         progressBarVideo = findViewById(R.id.videoPb);
         imageViewPlay = findViewById(R.id.iVPlay);
+
+        imageViewHsVideoBb = findViewById(R.id.hSVideoBackButton);
 
 //        progressBarVideo = findViewById(R.id.videoPb);
 //        ytOverlay = findViewById(R.id.ytOverlay);
@@ -96,6 +99,14 @@ public class VideoPlayer extends AppCompatActivity {
 
         player.play();
 //        initDoubleTapPlayerView();
+
+        imageViewHsVideoBb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+//                player.stop();
+            }
+        });
     }
 
 

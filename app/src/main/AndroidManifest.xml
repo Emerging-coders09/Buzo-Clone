@@ -21,7 +21,8 @@
         android:theme="@style/Theme.BuzoClone"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="stateHidden">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".CategoryActivity"></activity>
+        <activity android:name=".SearchActivity" />
         <!--
         <receiver android:name=".StatusSaverFragment$MyBroadCastReceiver"
             android:exported="true"

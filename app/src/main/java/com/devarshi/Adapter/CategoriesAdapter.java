@@ -1,7 +1,7 @@
 package com.devarshi.Adapter;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,63 +12,64 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devarshi.Retrofitclient.Category;
+import com.devarshi.buzoclone.CategoryActivity;
 import com.devarshi.buzoclone.R;
 
 import java.util.ArrayList;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.categoriesHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesHolder> {
 
-    ArrayList<String> dataForCatTitles;
-    ArrayList<String> dataForCatImages;
+    ArrayList<Category> dataForCatItems;
     Context mContext;
 
-    public CategoriesAdapter(ArrayList<String> dataForCatTitles,ArrayList<String> dataForCatImages, Context mContext) {
-        this.dataForCatTitles = dataForCatTitles;
-        this.dataForCatImages = dataForCatImages;
+    public CategoriesAdapter(ArrayList<Category> dataForCatItems, Context mContext) {
+
+        this.dataForCatItems = dataForCatItems;
         this.mContext = mContext;
     }
 
     @NonNull
     @Override
-    public categoriesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoriesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.layout_for_categories,parent,false);
-        return new categoriesHolder(view);
+        return new CategoriesHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoriesAdapter.categoriesHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoriesAdapter.CategoriesHolder holder, int position) {
 
-        Glide.with(mContext).load(dataForCatImages.get(position)).into(holder.imageView);
+        Glide.with(mContext).load(dataForCatItems.get(position).getImageUrl()).into(holder.imageViewCat);
 
-        holder.textView.setText(dataForCatTitles.get(position));
+        holder.textViewCat.setText(dataForCatItems.get(position).getName());
 
     }
 
     @Override
     public int getItemCount() {
-        return dataForCatTitles.size();
+        return dataForCatItems.size();
     }
 
-    public class categoriesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class CategoriesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        ImageView imageView;
-        TextView textView;
+        ImageView imageViewCat;
+        TextView textViewCat;
 
-        public categoriesHolder(@NonNull View itemView) {
+        public CategoriesHolder(@NonNull View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            textView = (TextView) itemView.findViewById(R.id.textView);
+            imageViewCat = (ImageView) itemView.findViewById(R.id.imageView);
+            textViewCat = (TextView) itemView.findViewById(R.id.textView);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
-            Log.i("Categories","Clicked");
+            Intent intent = new Intent(v.getContext(),CategoryActivity.class);
+            v.getContext().startActivity(intent);
         }
     }
 }
