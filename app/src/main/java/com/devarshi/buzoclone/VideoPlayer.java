@@ -75,6 +75,10 @@ public class VideoPlayer extends AppCompatActivity {
                 else {
                     progressBarVideo.setVisibility(View.GONE);
                 }
+
+                if (playbackState == Player.STATE_ENDED){
+                    player.play();
+                }
             }
         });
 
@@ -86,6 +90,8 @@ public class VideoPlayer extends AppCompatActivity {
                     onPause();
                     imageViewPlay.setVisibility(View.VISIBLE);
                     isPlaying = false;
+
+
                 }
                 else {
                     imageViewPlay.setVisibility(View.GONE);

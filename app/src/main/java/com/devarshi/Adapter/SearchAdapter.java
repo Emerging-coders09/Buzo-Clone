@@ -1,6 +1,7 @@
 package com.devarshi.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devarshi.Retrofitclient.Category;
+import com.devarshi.buzoclone.CategoryActivity;
 import com.devarshi.buzoclone.R;
 
 import java.util.ArrayList;
@@ -18,14 +21,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     Context mContext;
 
-    ArrayList<String> dataForCatNames;
-    ArrayList<String> dataForCatImageUrls;
+    ArrayList<Category> dataForCatItems;
+    FinishSearchOnClick finishSearchOnClick;
 
-    public SearchAdapter(ArrayList<String> dataForCatNames, ArrayList<String> dataForCatImageUrls, Context mContext) {
+    public SearchAdapter(ArrayList<Category> dataForCatItems,FinishSearchOnClick finishSearchOnClick, Context mContext) {
 
+        this.dataForCatItems = dataForCatItems;
+        this.finishSearchOnClick = finishSearchOnClick;
         this.mContext = mContext;
-        this.dataForCatNames = dataForCatNames;
-        this.dataForCatImageUrls = dataForCatImageUrls;
     }
 
     @Override
@@ -38,18 +41,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
 
-        holder.catNameTextView.setText(dataForCatNames.get(position));
+        holder.catNameTextView.setText(dataForCatItems.get(position).getName());
 
-        Glide.with(mContext).load(dataForCatImageUrls.get(position)).into(holder.catIconsImageView);
+        Glide.with(mContext).load(dataForCatItems.get(position).getImageUrl()).into(holder.catIconsImageView);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CategoryActivity.class);
+                intent.putExtra("catid",dataForCatItems.get(position).getId());
+                intent.putExtra("catname",dataForCatItems.get(position).getName());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+                finishSearchOnClick.finishSearchActivity();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return dataForCatNames.size();
+        return dataForCatItems.size();
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder{
+    public class SearchViewHolder extends RecyclerView.ViewHolder {
 
         ImageView catIconsImageView;
         TextView catNameTextView;
@@ -60,5 +75,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             catIconsImageView = itemView.findViewById(R.id.iVCatIcons);
             catNameTextView = itemView.findViewById(R.id.iVCatNames);
         }
+    }
+
+    public interface FinishSearchOnClick{
+        void finishSearchActivity();
     }
 }

@@ -31,11 +31,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="TextView"
             android:fontFamily="@font/ptserifregular"
             android:letterSpacing="0.19"
-            android:textStyle="bold"
+            android:text="TextView"
             android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/iVBack"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,24 +55,46 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rVCatVideos"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/sRCatVideos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cLCat" />
+        app:layout_constraintTop_toBottomOf="@+id/cLCat">
 
-    <ProgressBar
-        android:id="@+id/pBCatVideos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/rVCatVideos"
-        android:indeterminateTint="@color/black"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cLCat" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rVCatVideos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <ProgressBar
+            android:id="@+id/pBCatVideos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/black"
+            android:visibility="gone" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fAbCatVideos"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:fabCustomSize="40dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_arrow_upward_24"
+        app:tint="@color/white"
+        app:backgroundTint="@color/black"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

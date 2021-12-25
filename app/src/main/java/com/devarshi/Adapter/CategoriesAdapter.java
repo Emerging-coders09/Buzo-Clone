@@ -45,6 +45,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         holder.textViewCat.setText(dataForCatItems.get(position).getName());
 
+        holder.imageViewCat.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, CategoryActivity.class);
+            intent.putExtra("catid",dataForCatItems.get(position).getId());
+//            Log.d(TAG, "onBindViewHolder: catid " + dataForCatItems.get(position).getId());
+            intent.putExtra("catname",dataForCatItems.get(position).getName());
+            mContext.startActivity(intent);
+        });
     }
 
     @Override
@@ -52,7 +59,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         return dataForCatItems.size();
     }
 
-    public static class CategoriesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class CategoriesHolder extends RecyclerView.ViewHolder{
 
         ImageView imageViewCat;
         TextView textViewCat;
@@ -62,14 +69,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
             imageViewCat = (ImageView) itemView.findViewById(R.id.imageView);
             textViewCat = (TextView) itemView.findViewById(R.id.textView);
-
-            itemView.setOnClickListener(this);
         }
 
-        @Override
+        /*@Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(),CategoryActivity.class);
+            intent.putExtra("catId",)
             v.getContext().startActivity(intent);
-        }
+        }*/
     }
 }

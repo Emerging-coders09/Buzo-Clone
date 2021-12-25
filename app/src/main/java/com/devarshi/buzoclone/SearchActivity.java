@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devarshi.Adapter.SearchAdapter;
+import com.devarshi.Retrofitclient.Category;
 import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
@@ -22,15 +23,14 @@ import retrofit2.Response;
 
 import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SearchAdapter.FinishSearchOnClick {
 
     ImageView backToHomeImageView;
     SearchAdapter searchAdapter;
 
     RecyclerView catsRecyclerView;
 
-    ArrayList<String> listOfCatNames = new ArrayList<>();
-    ArrayList<String> listOfCatIcons = new ArrayList<>();
+    ArrayList<Category> listOfCatItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         catsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        searchAdapter = new SearchAdapter(listOfCatNames,listOfCatIcons,this);
+        searchAdapter = new SearchAdapter(listOfCatItems,this,this);
         catsRecyclerView.setAdapter(searchAdapter);
 
         CallRetrofitForSa();
@@ -71,10 +71,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onResponse: " + response.body().getData().getCategories());
 
-                for (int i = 0; i < response.body().getData().getCategories().size(); i++) {
-                    listOfCatNames.add(response.body().getData().getCategories().get(i).getName());
-                    listOfCatIcons.add(response.body().getData().getCategories().get(i).getImageUrl());
-                }
+                listOfCatItems.addAll(response.body().getData().getCategories());
 
                 searchAdapter.notifyDataSetChanged();
             }
@@ -94,5 +91,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
         overridePendingTransition(0,R.anim.slide_in_bottom);
+    }
+
+    @Override
+    public void finishSearchActivity() {
+        finish();
     }
 }
