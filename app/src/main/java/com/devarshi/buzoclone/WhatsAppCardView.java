@@ -3,12 +3,10 @@ package com.devarshi.buzoclone;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,8 +28,10 @@ public class WhatsAppCardView extends AppCompatActivity {
     TextView textViewSeeAll;
     public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
     ImageView backImageView;
-    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT == 29 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
+//        String WHATSAPP_STATUSES_LOCATION =  Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT <= 30 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
+//    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 30 ? "WhatsApp/Media/.Statuses" : "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
+    String WHATSAPP_STATUSES_LOCATION = "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +54,9 @@ public class WhatsAppCardView extends AppCompatActivity {
             }
         });
 
-        statusRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        statusRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        StatusCardViewAdapter statusRecyclerAdapter = new StatusCardViewAdapter(this,this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
+        StatusCardViewAdapter statusRecyclerAdapter = new StatusCardViewAdapter(this, this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
         statusRecyclerView.setAdapter(statusRecyclerAdapter);
 
         textViewSeeAll.setOnClickListener(v -> {
@@ -67,8 +67,9 @@ public class WhatsAppCardView extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), StatusDownloader.class);
                 startActivity(intent);
             }
-    });
-}
+        });
+    }
+
     private ArrayList<File> getListFiles(File parentDir) {
         ArrayList<File> inFiles = new ArrayList<>();
         File[] files;

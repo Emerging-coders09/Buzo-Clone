@@ -22,9 +22,12 @@ import java.util.ArrayList;
 
 public class StatusViewerFragment extends Fragment {
 
-    public static String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT == 29 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
+    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT == 30 ? "Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT == 29 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses"));
+//    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT<=30  ? "WhatsApp/Media/.Statuses":"Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshStatus;
+
+//    String WHATSAPP_STATUSES_LOCATION = "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
     public StatusViewerFragment() {
         // Required empty public constructor

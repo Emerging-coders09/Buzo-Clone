@@ -1,19 +1,27 @@
 package com.devarshi.buzoclone;
 
+import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
+
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.devarshi.Adapter.FilteredVideosAdapter;
 import com.devarshi.Adapter.SearchAdapter;
 import com.devarshi.Retrofitclient.Category;
 import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
+import com.devarshi.Retrofitclient.Template;
 
 import java.util.ArrayList;
 
@@ -21,16 +29,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
-
 public class SearchActivity extends AppCompatActivity implements SearchAdapter.FinishSearchOnClick {
 
     ImageView backToHomeImageView;
     SearchAdapter searchAdapter;
+    FilteredVideosAdapter filteredVideosAdapter;
 
-    RecyclerView catsRecyclerView;
+    RecyclerView catsRecyclerView, filteredVideosRv;
+    EditText searchEt;
+
+    ConstraintLayout catsConstraintLayout, videoTitleListCL;
 
     ArrayList<Category> listOfCatItems = new ArrayList<>();
+    ArrayList<Template> listOfFilteredVideos = new ArrayList<>();
+
+    int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +70,46 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
         CallRetrofitForSa();
 
+        searchEt = findViewById(R.id.eTSearch);
+        catsConstraintLayout = findViewById(R.id.cLCats);
+        videoTitleListCL = findViewById(R.id.cLVideoTitleList);
+
+        filteredVideosRv = findViewById(R.id.rVFilteredVideos);
+
+        LinearLayoutManager lLmForFilteredVideos = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        filteredVideosRv.setLayoutManager(lLmForFilteredVideos);
+
+        filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos);
+        filteredVideosRv.setAdapter(filteredVideosAdapter);
+
+        searchEt.requestFocus();
+
+        CallRetrofitForSr();
+
+        searchEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0){
+                    catsConstraintLayout.setVisibility(View.VISIBLE);
+                    videoTitleListCL.setVisibility(View.GONE);
+                }
+                else {
+                    catsConstraintLayout.setVisibility(View.GONE);
+                    videoTitleListCL.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void CallRetrofitForSa(){
@@ -84,6 +137,33 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
             }
         });
 
+    }
+
+    private void CallRetrofitForSr(){
+
+        RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
+
+        Call<Example> call = retrofitRequestApi.PostDataIntoServerForSearchRes("buzo","",String.valueOf(page));
+
+        call.enqueue(new Callback<Example>() {
+            @Override
+            public void onResponse(Call<Example> call, Response<Example> response) {
+
+                for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
+                    listOfFilteredVideos.add(response.body().getData().getTemplates().get(i));
+                }
+
+                filteredVideosAdapter.notifyDataSetChanged();
+
+                page++;
+
+            }
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+                Log.d(TAG, "onFailure: ",t);
+            }
+        });
     }
 
     @Override
