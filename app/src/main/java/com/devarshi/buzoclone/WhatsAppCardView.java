@@ -3,6 +3,7 @@ package com.devarshi.buzoclone;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -28,10 +29,10 @@ public class WhatsAppCardView extends AppCompatActivity {
     TextView textViewSeeAll;
     public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
     ImageView backImageView;
-//        String WHATSAPP_STATUSES_LOCATION =  Build.VERSION.SDK_INT <=28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT <= 30 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
+    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT <= 30 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
 //    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 30 ? "WhatsApp/Media/.Statuses" : "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
-    String WHATSAPP_STATUSES_LOCATION = "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
+//    String WHATSAPP_STATUSES_LOCATION = "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

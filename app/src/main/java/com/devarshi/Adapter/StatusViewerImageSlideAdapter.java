@@ -2,6 +2,7 @@ package com.devarshi.Adapter;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -76,7 +77,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull StatusViewerSlidingViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull StatusViewerSlidingViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         ExoPlayerManager exoPlayerManager = new ExoPlayerManager(context);
 
@@ -190,10 +191,23 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
             });
         }
 
+        /*holder.imageViewDownload.setVisibility(View.VISIBLE);
+        holder.imageViewDownloadComplete.setVisibility(View.GONE);
+
+        holder.imageViewDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToFavVideo(filePath);
+                Toast.makeText(context, "Item Saved", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
         int indexExistence = filePath.lastIndexOf('/');
         String filenameExistence = filePath.substring(indexExistence);
+        holder.imageViewDownload.setVisibility(View.VISIBLE);
+        holder.imageViewDownloadComplete.setVisibility(View.GONE);
 
-        File fileExistence = new File(Environment.getExternalStorageDirectory() + StatusSaverFragment.SAVED_FILES_LOCATION, filenameExistence);
+        File fileExistence = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + StatusSaverFragment.SAVED_FILES_LOCATION, filenameExistence);
 
         if (!fileExistence.exists()) {
 
@@ -253,11 +267,13 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
 
         try {
             File currentFile = new File(filePath);
-            File directory = new File(Environment.getExternalStorageDirectory() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
+            File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Buzo-VideoStatusMakerOne");
+
+            directory.mkdir();
 
             if (!directory.exists()) {
-                File imageStoreDirectory = new File(Environment.getExternalStorageDirectory() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
-                imageStoreDirectory.mkdirs();
+                File imageStoreDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Buzo-VideoStatusMakerOne");
+                imageStoreDirectory.mkdir();
             }
 
             int index = filePath.lastIndexOf('/');
@@ -281,7 +297,6 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
                 outputStream.close();
 
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -359,9 +374,14 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
             File loc = Environment.getExternalStorageDirectory();
             File directory = new File(loc.getAbsolutePath() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
 
-            if (!directory.exists()) {
+            *//*if (!directory.exists()) {
                 File videoStoreDirectory = new File(loc.getAbsolutePath() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
                 videoStoreDirectory.mkdirs();
+            }*//*
+
+            if (!directory.exists()) {
+                File videoStoreDir = new File(loc.getAbsolutePath() + "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker");
+                directory.mkdirs();
             }
 
             int index = filePath.lastIndexOf('/');
@@ -389,8 +409,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }*/
+        }*/
 
     /*@RequiresApi(api = Build.VERSION_CODES.Q)
     public void addToFavVideo(Bitmap bitmap, String filename){

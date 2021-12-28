@@ -19,6 +19,6 @@ public interface RetrofitRequestApi {
 
     @FormUrlEncoded
     @POST("/api/v1/search")
-    Call<Example> PostDataIntoServerForSearchRes(@Field("app_name") String app_name,@Field("string") String string,
+    Call<ExampleFilteredData> PostDataIntoServerForSearchRes(@Field("app_name") String app_name,@Field("string") String string,
                                                  @Field("page") String page);
 }

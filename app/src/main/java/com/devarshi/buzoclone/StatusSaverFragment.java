@@ -37,7 +37,7 @@ public class StatusSaverFragment extends Fragment {
  //            }
          }
      }*/
-    public static String SAVED_FILES_LOCATION = "/Buzo-VideoStatusMakerOne/StatusDownloader-Buzo-VideoStatusMaker";
+    public static String SAVED_FILES_LOCATION = "/Buzo-VideoStatusMakerOne";
 
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshLayoutSaved;

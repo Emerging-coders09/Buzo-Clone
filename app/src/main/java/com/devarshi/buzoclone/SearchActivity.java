@@ -3,14 +3,12 @@ package com.devarshi.buzoclone;
 import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +17,10 @@ import com.devarshi.Adapter.FilteredVideosAdapter;
 import com.devarshi.Adapter.SearchAdapter;
 import com.devarshi.Retrofitclient.Category;
 import com.devarshi.Retrofitclient.Example;
+import com.devarshi.Retrofitclient.ExampleFilteredData;
+import com.devarshi.Retrofitclient.FilteredData;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
-import com.devarshi.Retrofitclient.Template;
 
 import java.util.ArrayList;
 
@@ -36,12 +35,13 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
     FilteredVideosAdapter filteredVideosAdapter;
 
     RecyclerView catsRecyclerView, filteredVideosRv;
-    EditText searchEt;
+    SearchView searchView;
+//    EditText searchEt;
 
     ConstraintLayout catsConstraintLayout, videoTitleListCL;
 
     ArrayList<Category> listOfCatItems = new ArrayList<>();
-    ArrayList<Template> listOfFilteredVideos = new ArrayList<>();
+    ArrayList<FilteredData> listOfFilteredVideos = new ArrayList<FilteredData>();
 
     int page = 1;
 
@@ -56,37 +56,65 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(0,R.anim.slide_in_bottom);
+                overridePendingTransition(0, R.anim.slide_in_bottom);
             }
         });
 
         catsRecyclerView = findViewById(R.id.rVCategories);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         catsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        searchAdapter = new SearchAdapter(listOfCatItems,this,this);
+        searchAdapter = new SearchAdapter(listOfCatItems, this, this);
         catsRecyclerView.setAdapter(searchAdapter);
 
         CallRetrofitForSa();
 
-        searchEt = findViewById(R.id.eTSearch);
+//        searchEt = findViewById(R.id.eTSearch);
+        searchView = findViewById(R.id.searchViewRt);
         catsConstraintLayout = findViewById(R.id.cLCats);
         videoTitleListCL = findViewById(R.id.cLVideoTitleList);
 
         filteredVideosRv = findViewById(R.id.rVFilteredVideos);
 
-        LinearLayoutManager lLmForFilteredVideos = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager lLmForFilteredVideos = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         filteredVideosRv.setLayoutManager(lLmForFilteredVideos);
 
         filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos);
         filteredVideosRv.setAdapter(filteredVideosAdapter);
 
-        searchEt.requestFocus();
+//        searchEt.requestFocus();
 
-        CallRetrofitForSr();
+        searchView.requestFocus();
 
-        searchEt.addTextChangedListener(new TextWatcher() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                CallRetrofitForSr();
+
+
+                if (newText.length() == 0) {
+                    catsConstraintLayout.setVisibility(View.VISIBLE);
+                    videoTitleListCL.setVisibility(View.GONE);
+                } else {
+                    catsConstraintLayout.setVisibility(View.GONE);
+                    videoTitleListCL.setVisibility(View.VISIBLE);
+
+                    filteredVideosAdapter.getFilter().filter(newText);
+
+                }
+
+                return false;
+            }
+        });
+
+        /*searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -102,21 +130,22 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
 
+                    CallRetrofitForSr();
+
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
-        });
+        });*/
     }
 
-    private void CallRetrofitForSa(){
+    private void CallRetrofitForSa() {
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<Example> call = retrofitRequestApi.PostDataIntoServerForHsVideos("newest","","buzo");
+        Call<Example> call = retrofitRequestApi.PostDataIntoServerForHsVideos("newest", "", "buzo");
 
         call.enqueue(new Callback<Example>() {
             @Override
@@ -132,45 +161,51 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
 
-                Log.d(TAG, "onFailure: ",t);
+                Log.d(TAG, "onFailure: ", t);
 
             }
         });
 
     }
 
-    private void CallRetrofitForSr(){
+    private void CallRetrofitForSr() {
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<Example> call = retrofitRequestApi.PostDataIntoServerForSearchRes("buzo","",String.valueOf(page));
+        Call<ExampleFilteredData> call = retrofitRequestApi.PostDataIntoServerForSearchRes("buzo", "", String.valueOf(page));
 
-        call.enqueue(new Callback<Example>() {
+        call.enqueue(new Callback<ExampleFilteredData>() {
             @Override
-            public void onResponse(Call<Example> call, Response<Example> response) {
+            public void onResponse(Call<ExampleFilteredData> call, Response<ExampleFilteredData> response) {
 
-                for (int i = 0; i < response.body().getData().getTemplates().size(); i++) {
-                    listOfFilteredVideos.add(response.body().getData().getTemplates().get(i));
+                for (int i = 0; i < response.body().getData().size(); i++) {
+
+                    listOfFilteredVideos.add(response.body().getData().get(i));
+                    if (i == 19) {
+                        page++;
+//                        CallRetrofitForSr();
+                    }
                 }
 
                 filteredVideosAdapter.notifyDataSetChanged();
 
-                page++;
-
             }
 
             @Override
-            public void onFailure(Call<Example> call, Throwable t) {
-                Log.d(TAG, "onFailure: ",t);
+            public void onFailure(Call<ExampleFilteredData> call, Throwable t) {
+                Log.d(TAG, "onFailure: ", t);
             }
         });
+
+        page++;
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(0,R.anim.slide_in_bottom);
+        overridePendingTransition(0, R.anim.slide_in_bottom);
     }
 
     @Override
