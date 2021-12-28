@@ -19,7 +19,6 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
 
     ArrayList<FilteredData> dataForFilteredVideos;
     ArrayList<FilteredData> backupList;
-    String searchString="";
 
     public FilteredVideosAdapter(ArrayList<FilteredData> dataForFilteredVideos) {
         this.dataForFilteredVideos = dataForFilteredVideos;
@@ -68,7 +67,7 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
             else
             {
                 for(FilteredData filteredData : backupList){
-                    if (filteredData.getTitle().toLowerCase().contains(constraint.toString())){
+                    if (filteredData.getTitle().contains(constraint.toString())){
                         dataForFilteredList.add(filteredData);
                     }
                 }

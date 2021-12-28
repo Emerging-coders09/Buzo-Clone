@@ -96,15 +96,14 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                CallRetrofitForSr();
-
-
                 if (newText.length() == 0) {
                     catsConstraintLayout.setVisibility(View.VISIBLE);
                     videoTitleListCL.setVisibility(View.GONE);
                 } else {
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
+
+                    CallRetrofitForSr();
 
                     filteredVideosAdapter.getFilter().filter(newText);
 
