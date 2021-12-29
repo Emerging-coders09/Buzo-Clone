@@ -248,7 +248,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
 
 
 
-        /*if (fileExistence.exists()) {
+        if (fileExistence.exists()) {
 
             holder.imageViewDownloadComplete.setVisibility(View.VISIBLE);
             holder.imageViewDownload.setVisibility(View.GONE);
@@ -259,7 +259,7 @@ public class StatusViewerImageSlideAdapter extends RecyclerView.Adapter<StatusVi
                     Toast.makeText(context, "Item is already downloaded!", Toast.LENGTH_SHORT).show();
                 }
             });
-        }*/
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)

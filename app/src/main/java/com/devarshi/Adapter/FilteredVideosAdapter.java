@@ -3,8 +3,6 @@ package com.devarshi.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,21 +13,20 @@ import com.devarshi.buzoclone.R;
 
 import java.util.ArrayList;
 
-public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAdapter.FilteredVideosViewHolder> implements Filterable {
+public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAdapter.FilteredVideosViewHolder> {
 
     ArrayList<FilteredData> dataForFilteredVideos;
-    ArrayList<FilteredData> backupList;
+//    ArrayList<FilteredData> backupList = new ArrayList<>();
 
     public FilteredVideosAdapter(ArrayList<FilteredData> dataForFilteredVideos) {
         this.dataForFilteredVideos = dataForFilteredVideos;
-        backupList = new ArrayList<>(dataForFilteredVideos);
     }
 
     @NonNull
     @Override
     public FilteredVideosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_bar_filtered_list_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_bar_filtered_list_item, parent, false);
         return new FilteredVideosViewHolder(view);
     }
 
@@ -49,7 +46,16 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
         return dataForFilteredVideos.size();
     }
 
-    @Override
+    /*public void filterList(ArrayList<FilteredData> filterllist) {
+        // below line is to add our filtered
+        // list in our course array list.
+        dataForFilteredVideos = filterllist;
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged();
+    }*/
+
+    /*@Override
     public Filter getFilter() {
         return filter;
     }
@@ -63,11 +69,11 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
             ArrayList<FilteredData> dataForFilteredList = new ArrayList<>();
 
             if (constraint.toString().isEmpty())
-                dataForFilteredList.addAll(backupList);
+                dataForFilteredList.addAll(dataForFilteredVideos);
             else
             {
-                for(FilteredData filteredData : backupList){
-                    if (filteredData.getTitle().contains(constraint.toString())){
+                for(FilteredData filteredData : dataForFilteredVideos){
+                    if (filteredData.getTitle().contains(constraint.toString().toLowerCase())){
                         dataForFilteredList.add(filteredData);
                     }
                 }
@@ -87,9 +93,9 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
             notifyDataSetChanged();
         }
 
-    };
+    };*/
 
-    class FilteredVideosViewHolder extends RecyclerView.ViewHolder{
+    class FilteredVideosViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewSt;
 
@@ -101,8 +107,11 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
         }
     }
 
-    /*public void updateList(ArrayList<FilteredData> dataForFv){
+    public void updateList(ArrayList<FilteredData> dataForFv) {
+        /*dataForFilteredVideos.clear();
+        dataForFilteredVideos.addAll(dataForFv);*/
+        dataForFilteredVideos.clear();
         dataForFilteredVideos = dataForFv;
         notifyDataSetChanged();
-    }*/
+    }
 }

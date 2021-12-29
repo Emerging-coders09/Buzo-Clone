@@ -35,15 +35,19 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
     FilteredVideosAdapter filteredVideosAdapter;
 
     RecyclerView catsRecyclerView, filteredVideosRv;
-    SearchView searchView;
+        SearchView searchView;
 //    EditText searchEt;
 
     ConstraintLayout catsConstraintLayout, videoTitleListCL;
 
     ArrayList<Category> listOfCatItems = new ArrayList<>();
-    ArrayList<FilteredData> listOfFilteredVideos = new ArrayList<FilteredData>();
+    public static ArrayList<FilteredData> listOfFilteredVideos = new ArrayList<>();
 
-    int page = 1;
+    boolean searchApiCalling = false;
+
+//    int currentItems,scrolledOutItems,totalItems;
+
+    int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +107,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
 
-                    CallRetrofitForSr();
-
-                    filteredVideosAdapter.getFilter().filter(newText);
-
+                    CallRetrofitForSr(searchView.toString());
                 }
-
                 return false;
             }
         });
@@ -121,24 +121,39 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0){
+
+                if (s.toString().isEmpty()) {
                     catsConstraintLayout.setVisibility(View.VISIBLE);
                     videoTitleListCL.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
 
-                    CallRetrofitForSr();
-
+                    CallRetrofitForSr(s.toString());
+//                    filter(s.toString());
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+//                filter(s.toString());
+
             }
+
         });*/
     }
+
+    /*public void filter(String s) {
+
+        ArrayList<FilteredData> temp = new ArrayList<>();
+
+        for (FilteredData fd : listOfFilteredVideos) {
+            if (fd.getTitle().toLowerCase(Locale.getDefault()).contains(s)) {
+                temp.add(fd);
+            }
+        }
+        filteredVideosAdapter.updateList(temp);
+    }*/
 
     private void CallRetrofitForSa() {
 
@@ -167,23 +182,26 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
     }
 
-    private void CallRetrofitForSr() {
+    private void CallRetrofitForSr(String s) {
+
+        searchApiCalling = true;
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
 
-        Call<ExampleFilteredData> call = retrofitRequestApi.PostDataIntoServerForSearchRes("buzo", "", String.valueOf(page));
+        Call<ExampleFilteredData> call = retrofitRequestApi.PostDataIntoServerForSearchRes("buzo", s, String.valueOf(page));
 
         call.enqueue(new Callback<ExampleFilteredData>() {
             @Override
             public void onResponse(Call<ExampleFilteredData> call, Response<ExampleFilteredData> response) {
 
+                page++;
+
+                searchApiCalling = false;
+
                 for (int i = 0; i < response.body().getData().size(); i++) {
 
                     listOfFilteredVideos.add(response.body().getData().get(i));
-                    if (i == 19) {
-                        page++;
-//                        CallRetrofitForSr();
-                    }
+
                 }
 
                 filteredVideosAdapter.notifyDataSetChanged();
@@ -195,8 +213,6 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                 Log.d(TAG, "onFailure: ", t);
             }
         });
-
-        page++;
 
     }
 
