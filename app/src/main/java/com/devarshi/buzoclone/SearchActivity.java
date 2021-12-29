@@ -3,12 +3,14 @@ package com.devarshi.buzoclone;
 import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,8 +37,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
     FilteredVideosAdapter filteredVideosAdapter;
 
     RecyclerView catsRecyclerView, filteredVideosRv;
-        SearchView searchView;
-//    EditText searchEt;
+//        SearchView searchView;
+    EditText searchEt;
 
     ConstraintLayout catsConstraintLayout, videoTitleListCL;
 
@@ -74,8 +76,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
         CallRetrofitForSa();
 
-//        searchEt = findViewById(R.id.eTSearch);
-        searchView = findViewById(R.id.searchViewRt);
+        searchEt = findViewById(R.id.eTSearch);
+//        searchView = findViewById(R.id.searchViewRt);
         catsConstraintLayout = findViewById(R.id.cLCats);
         videoTitleListCL = findViewById(R.id.cLVideoTitleList);
 
@@ -87,9 +89,9 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
         filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos);
         filteredVideosRv.setAdapter(filteredVideosAdapter);
 
-//        searchEt.requestFocus();
+        searchEt.requestFocus();
 
-        searchView.requestFocus();
+        /*searchView.requestFocus();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -111,9 +113,9 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                 }
                 return false;
             }
-        });
+        });*/
 
-        /*searchEt.addTextChangedListener(new TextWatcher() {
+        searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -140,7 +142,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
             }
 
-        });*/
+        });
     }
 
     /*public void filter(String s) {

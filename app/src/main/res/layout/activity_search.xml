@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-    <!--<EditText
+    <EditText
         android:id="@+id/eTSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -16,9 +16,9 @@
         android:hint="Search..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iVBackToHome"
-        app:layout_constraintTop_toTopOf="parent" />-->
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.SearchView
+    <!--<androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewRt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iVBackToHome"
         app:layout_constraintTop_toTopOf="parent"
-        app:searchIcon="@null" />
+        app:searchIcon="@null" />-->
 
     <ImageView
         android:id="@+id/iVBackToHome"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchViewRt">
+        app:layout_constraintTop_toBottomOf="@+id/eTSearch">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -96,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchViewRt">
+        app:layout_constraintTop_toBottomOf="@+id/eTSearch">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rVFilteredVideos"
