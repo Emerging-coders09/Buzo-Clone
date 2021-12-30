@@ -8,17 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devarshi.Retrofitclient.FilteredData;
 import com.devarshi.buzoclone.R;
 
 import java.util.ArrayList;
 
 public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAdapter.FilteredVideosViewHolder> {
 
-    ArrayList<FilteredData> dataForFilteredVideos;
+    ArrayList<String> dataForFilteredVideos;
 //    ArrayList<FilteredData> backupList = new ArrayList<>();
 
-    public FilteredVideosAdapter(ArrayList<FilteredData> dataForFilteredVideos) {
+    public FilteredVideosAdapter(ArrayList<String> dataForFilteredVideos) {
         this.dataForFilteredVideos = dataForFilteredVideos;
     }
 
@@ -33,7 +32,7 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
     @Override
     public void onBindViewHolder(@NonNull FilteredVideosViewHolder holder, int position) {
 
-        holder.textViewSt.setText(dataForFilteredVideos.get(position).getTitle());
+        holder.textViewSt.setText(dataForFilteredVideos.get(position));
     }
 
     @Override
@@ -107,11 +106,11 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
         }
     }
 
-    public void updateList(ArrayList<FilteredData> dataForFv) {
-        /*dataForFilteredVideos.clear();
-        dataForFilteredVideos.addAll(dataForFv);*/
+    public void updateList(ArrayList<String> dataForFv) {
         dataForFilteredVideos.clear();
-        dataForFilteredVideos = dataForFv;
+        dataForFilteredVideos.addAll(dataForFv);
+        /*dataForFilteredVideos.clear();
+        dataForFilteredVideos = dataForFv;*/
         notifyDataSetChanged();
     }
 }

@@ -3,6 +3,7 @@ package com.devarshi.Retrofitclient;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface RetrofitRequestApi {
@@ -17,8 +18,6 @@ public interface RetrofitRequestApi {
     Call<Example> PostDataIntoServerForCatVideos(@Field("sort_by") String sort_by,@Field("video_loaded_ids") String video_loaded_ids,
                                                  @Field("cat_id") String cat_id,@Field("app_name") String app_name);
 
-    @FormUrlEncoded
-    @POST("/api/v1/search")
-    Call<ExampleFilteredData> PostDataIntoServerForSearchRes(@Field("app_name") String app_name,@Field("string") String string,
-                                                 @Field("page") String page);
+    @GET("/search-json/search-json-object.json")
+    Call<ExampleTitleList> PostDataIntoServerForSearchRes();
 }
