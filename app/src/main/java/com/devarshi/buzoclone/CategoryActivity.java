@@ -1,5 +1,7 @@
 package com.devarshi.buzoclone;
 
+import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,14 +31,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
-
 public class CategoryActivity extends AppCompatActivity {
 
     ImageView backButtonIv, searchButtonIv;
     TextView catNameTv;
     RecyclerView catVideosRv;
-    ProgressBar catVideosPb;
+    ProgressBar catVideosPb, videoLoadPb;
 
     SwipeRefreshLayout catVideosSr;
 
@@ -66,11 +66,11 @@ public class CategoryActivity extends AppCompatActivity {
 
         catVideosPb = findViewById(R.id.pBCatVideos);
 
+        videoLoadPb = findViewById(R.id.pbVideoLoad);
+
         catVideosSr = findViewById(R.id.sRCatVideos);
 
         catVideosFab = findViewById(R.id.fAbCatVideos);
-
-
 
         catVideosSr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -144,6 +144,8 @@ public class CategoryActivity extends AppCompatActivity {
 
         catVideosPb.setVisibility(View.VISIBLE);
 
+        videoLoadPb.setVisibility(View.VISIBLE);
+
         apiCallInProgress = true;
 
         RetrofitRequestApi retrofitRequestApi = Retrofitclient.getRetrofit().create(RetrofitRequestApi.class);
@@ -165,6 +167,8 @@ public class CategoryActivity extends AppCompatActivity {
                 listOfTemplateItems.addAll(response.body().getData().getTemplates());
 
                 categoryVideosAdapter.notifyDataSetChanged();
+
+                videoLoadPb.setVisibility(View.GONE);
 
                 catVideosPb.setVisibility(View.GONE);
 

@@ -22,6 +22,7 @@ import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.ExampleTitleList;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
+import com.devarshi.Retrofitclient.Template;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,6 +47,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
     ConstraintLayout catsConstraintLayout, videoTitleListCL;
 
     ArrayList<Category> listOfCatItems = new ArrayList<>();
+    ArrayList<Template> listOfVidsItems = new ArrayList<>();
     public ArrayList<String> listOfFilteredVideos = new ArrayList<>();
 
     boolean searchApiCalling = false;
@@ -89,7 +91,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
         LinearLayoutManager lLmForFilteredVideos = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         filteredVideosRv.setLayoutManager(lLmForFilteredVideos);
 
-        filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos);
+        filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos,listOfVidsItems,this,SearchActivity.this);
         filteredVideosRv.setAdapter(filteredVideosAdapter);
 
 //        searchEt.requestFocus();
@@ -209,6 +211,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                 Log.d(TAG, "onResponse: " + response.body().getData().getCategories());
 
                 listOfCatItems.addAll(response.body().getData().getCategories());
+
+                listOfVidsItems.addAll(response.body().getData().getTemplates());
 
                 searchAdapter.notifyDataSetChanged();
             }

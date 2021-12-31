@@ -1,5 +1,8 @@
 package com.devarshi.Adapter;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +11,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.devarshi.Retrofitclient.Template;
 import com.devarshi.buzoclone.R;
+import com.devarshi.buzoclone.SearchVideoTitleResultActivity;
 
 import java.util.ArrayList;
 
 public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAdapter.FilteredVideosViewHolder> {
 
     ArrayList<String> dataForFilteredVideos;
+    ArrayList<Template> dataForTempVideos;
+    Context mContext;
+    Activity activity;
 //    ArrayList<FilteredData> backupList = new ArrayList<>();
 
-    public FilteredVideosAdapter(ArrayList<String> dataForFilteredVideos) {
+    public FilteredVideosAdapter(ArrayList<String> dataForFilteredVideos,ArrayList<Template> dataForTempVideos,Context mContext,Activity activity) {
         this.dataForFilteredVideos = dataForFilteredVideos;
+        this.dataForTempVideos = dataForTempVideos;
+        this.mContext = mContext;
+        this.activity = activity;
     }
 
     @NonNull
@@ -33,6 +44,14 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
     public void onBindViewHolder(@NonNull FilteredVideosViewHolder holder, int position) {
 
         holder.textViewSt.setText(dataForFilteredVideos.get(position));
+
+        holder.textViewSt.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, SearchVideoTitleResultActivity.class);
+            intent.putExtra("title",dataForFilteredVideos.get(position));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mContext.startActivity(intent);
+            activity.finish();
+        });
     }
 
     @Override

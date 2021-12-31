@@ -11,8 +11,11 @@
         <entry key="app/src/main/res/layout-xhdpi/activity_main.xml" value="0.4952956989247312" />
         <entry key="app/src/main/res/layout-xxhdpi/activity_main.xml" value="0.20018115942028986" />
         <entry key="app/src/main/res/layout-xxxhdpi/activity_main.xml" value="0.15095628415300547" />
+        <entry key="app/src/main/res/layout/activity_category.xml" value="0.22404371584699453" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.8371212121212122" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.24726775956284153" />
+        <entry key="app/src/main/res/layout/activity_search_video_title_result.xml" value="0.22404371584699453" />
+        <entry key="app/src/main/res/layout/home_screen_video_layout.xml" value="0.22404371584699453" />
         <entry key="app/src/main/res/layout/search_bar_filtered_list_item.xml" value="0.24726775956284153" />
         <entry key="app/src/main/res/layout/search_categories_row_item.xml" value="0.24282786885245902" />
         <entry key="app/src/main/res/layout/status_saver_media_row_item.xml" value="0.20018115942028986" />
