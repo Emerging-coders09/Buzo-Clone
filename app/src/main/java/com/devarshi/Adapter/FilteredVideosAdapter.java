@@ -25,7 +25,7 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
     Activity activity;
 //    ArrayList<FilteredData> backupList = new ArrayList<>();
 
-    public FilteredVideosAdapter(ArrayList<String> dataForFilteredVideos,ArrayList<Template> dataForTempVideos,Context mContext,Activity activity) {
+    public FilteredVideosAdapter(ArrayList<String> dataForFilteredVideos, ArrayList<Template> dataForTempVideos, Context mContext, Activity activity) {
         this.dataForFilteredVideos = dataForFilteredVideos;
         this.dataForTempVideos = dataForTempVideos;
         this.mContext = mContext;
@@ -45,9 +45,10 @@ public class FilteredVideosAdapter extends RecyclerView.Adapter<FilteredVideosAd
 
         holder.textViewSt.setText(dataForFilteredVideos.get(position));
 
-        holder.textViewSt.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, SearchVideoTitleResultActivity.class);
-            intent.putExtra("title",dataForFilteredVideos.get(position));
+            intent.putExtra("title", dataForFilteredVideos.get(position));
+//            intent.putExtra("id", dataForTempVideos.get(position).getId());
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             activity.finish();

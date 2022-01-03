@@ -20,4 +20,9 @@ public interface RetrofitRequestApi {
 
     @GET("/search-json/search-json-object.json")
     Call<ExampleTitleList> PostDataIntoServerForSearchRes();
+
+    @FormUrlEncoded
+    @POST("/api/v1/search")
+    Call<SearchAPIData> PostDataIntoServerForFilVids(@Field("app_name") String app_name,@Field("string") String string,
+                                                 @Field("page") String page);
 }

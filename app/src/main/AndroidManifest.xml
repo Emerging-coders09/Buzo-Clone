@@ -21,7 +21,7 @@
         android:windowSoftInputMode="stateHidden">
         <activity
             android:name=".SearchVideoTitleResultActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity android:name=".CategoryActivity" />
         <activity android:name=".SearchActivity" />
         <!--
