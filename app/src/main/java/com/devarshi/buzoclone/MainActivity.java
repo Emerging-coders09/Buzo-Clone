@@ -1,5 +1,7 @@
 package com.devarshi.buzoclone;
 
+import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,8 +32,12 @@ import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.devarshi.Retrofitclient.Template;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,11 +47,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
-
 public class MainActivity extends AppCompatActivity {
 
-//    RecyclerView recyclerViewCategories;
+    //    RecyclerView recyclerViewCategories;
     RecyclerView recyclerViewVideos;
 
     NavigationView navigationView;
@@ -73,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Template> listOfTempItems = new ArrayList<>();
     ArrayList<Category> listOfCatItems = new ArrayList<>();
 
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+
     FloatingActionButton fab;
 
-//    boolean isScrolling = false;
+    //    boolean isScrolling = false;
     boolean apiCalling = false;
 
     //    int varId = 0;
@@ -91,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
     String vdoLoadedId = "";
 
     Intent intent;
+    TextView rCTextTv;
+
+    private static final String RCTEXT_VALUE = "test";
+    private static final String RC_TEXT_LOADING_VALUE = "testloading";
 //    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
@@ -99,11 +110,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        rCTextTv = findViewById(R.id.tVRcText);
+//        rCTextTv.setText("Devarshi");
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+
+        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
+
+        mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            boolean updated = task.getResult();
+                            Log.d(TAG, "Config params updated: " + updated);
+                            Toast.makeText(MainActivity.this, "Fetch and activate succeeded",
+                                    Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "Fetch failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        displayWelcomeMessage();
+                    }
+                });
 
         /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 
-        setContentView(R.layout.activity_main);
 
 //        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
         recyclerViewVideos = findViewById(R.id.recyclerViewVideos);
@@ -121,9 +162,9 @@ public class MainActivity extends AppCompatActivity {
         searchCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(MainActivity.this,SearchActivity.class);
+                intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_top,0);
+                overridePendingTransition(R.anim.slide_in_top, 0);
             }
         });
 
@@ -137,14 +178,13 @@ public class MainActivity extends AppCompatActivity {
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this,2,GridLayoutManager.VERTICAL,false);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2, GridLayoutManager.VERTICAL, false);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if (position == 0){
+                    if (position == 0) {
                         return 2;
-                    }
-                    else {
+                    } else {
                         return 1;
 
                     }
@@ -214,23 +254,21 @@ public class MainActivity extends AppCompatActivity {
 //        swipeRefreshLayout.setRefreshing(false);
 
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (position == 0){
+                if (position == 0) {
                     return 2;
-                }
-                else {
+                } else {
                     return 1;
                 }
             }
         });
 
         recyclerViewVideos.setLayoutManager(gridLayoutManager);
-        videosAdapter = new VideosAdapter(listOfTempItems,listOfCatItems,MainActivity.this);
+        videosAdapter = new VideosAdapter(listOfTempItems, listOfCatItems, MainActivity.this);
         recyclerViewVideos.setAdapter(videosAdapter);
-
 
         /*recyclerViewVideos.setNestedScrollingEnabled(false);
         recyclerViewCategories.setNestedScrollingEnabled(false);*/
@@ -347,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onScrolled: scrolledOutItems" + scrolledOutItems);
                 Log.d(TAG, "onScrolled: totalItems" + totalItems);
 
-                if (scrolledOutItems > 5){
+                if (scrolledOutItems > 5) {
                     fab.show();
                     fab.setOnClickListener(new View.OnClickListener() {
 
@@ -357,12 +395,11 @@ public class MainActivity extends AppCompatActivity {
 //                            gridLayoutManager.scrollToPosition(0);
                         }
                     });
-                }
-                else {
+                } else {
                     fab.hide();
                 }
 
-                if (!apiCalling && (currentItems + scrolledOutItems == totalItems)){
+                if (!apiCalling && (currentItems + scrolledOutItems == totalItems)) {
                     Log.d(TAG, "onScrolled: API Called");
                     CallRetrofitForHomeScreenVideos();
 //                    swipeRefreshLayout.setRefreshing(false);
@@ -607,6 +644,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    private void displayWelcomeMessage() {
+        // [START get_config_values]
+        String welcomeMessage = mFirebaseRemoteConfig.getString(RC_TEXT_LOADING_VALUE);
+        // [END get_config_values]
+        if (mFirebaseRemoteConfig.getBoolean(RCTEXT_VALUE)) {
+            rCTextTv.setAllCaps(true);
+        } else {
+            rCTextTv.setAllCaps(false);
+        }
+        rCTextTv.setText(welcomeMessage);
     }
 
     /*private void fetchData() {

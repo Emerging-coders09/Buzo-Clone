@@ -251,4 +251,20 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/bTTestCrash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Test Crash"/>
+
+    <TextView
+        android:id="@+id/tVWacv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+
 </LinearLayout>

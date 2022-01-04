@@ -1,5 +1,6 @@
 package com.devarshi.buzoclone;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,9 @@ public class StatusViewerFragment extends Fragment {
 //    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT<=30  ? "WhatsApp/Media/.Statuses":"Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
     RecyclerView mRecyclerViewMediaList;
     SwipeRefreshLayout swipeRefreshStatus;
+    Context mContext;
+
+//    private FirebaseAnalytics mFirebaseAnalytics;
 
 //    String WHATSAPP_STATUSES_LOCATION = "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
@@ -33,6 +37,12 @@ public class StatusViewerFragment extends Fragment {
         // Required empty public constructor
 
     }
+
+    /*@Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +70,16 @@ public class StatusViewerFragment extends Fragment {
         mRecyclerViewMediaList.setLayoutManager(staggeredGridLayoutManager);
         ListAdapterStatus recyclerViewMediaAdapter = new ListAdapterStatus(getActivity(),this.getListFiles(new File(Environment.getExternalStorageDirectory().toString() + WHATSAPP_STATUSES_LOCATION)));
         mRecyclerViewMediaList.setAdapter(recyclerViewMediaAdapter);
+
+        /*mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+        StatusViewerFragment fragment = new StatusViewerFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, fragment.getClass().getSimpleName());
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, fragment.getClass().getSimpleName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);*/
+
         return view;
     }
 

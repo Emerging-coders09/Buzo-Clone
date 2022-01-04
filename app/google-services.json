@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "750167698833",
+    "project_id": "buzo-clone",
+    "storage_bucket": "buzo-clone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750167698833:android:ce04cb0ee6d404bde93e30",
+        "android_client_info": {
+          "package_name": "com.devarshi.buzoclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "750167698833-enfp0drctcoaf4iutbfaclbe78n0k2on.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devarshi.buzoclone",
+            "certificate_hash": "06736b8585492fa392150c723a255fdcfdab16a1"
+          }
+        },
+        {
+          "client_id": "750167698833-mskknh5oo8gfeo0jsecniti4f9uqa3e8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAggKLBUjt8UMDaVyaBAQcAYwt3GvPj8nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "750167698833-mskknh5oo8gfeo0jsecniti4f9uqa3e8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

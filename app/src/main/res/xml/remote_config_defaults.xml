@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+
+    <entry>
+        <key>test</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>testloading</key>
+        <value>loading</value>
+    </entry>
+    <entry>
+        <key>wacvTv</key>
+        <value>nothing</value>
+    </entry>
+    <entry>
+        <key>test2</key>
+        <value>false</value>
+    </entry>
+
+</defaultsMap>
