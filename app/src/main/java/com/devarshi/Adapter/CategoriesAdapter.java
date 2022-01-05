@@ -23,6 +23,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     ArrayList<Category> dataForCatItems;
     Context mContext;
 
+
+
     public CategoriesAdapter(ArrayList<Category> dataForCatItems, Context mContext) {
 
         this.dataForCatItems = dataForCatItems;

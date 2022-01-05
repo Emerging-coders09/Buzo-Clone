@@ -18,4 +18,14 @@
         <value>false</value>
     </entry>
 
+    <entry>
+        <key>catkey</key>
+        <value>nothing</value>
+    </entry>
+
+    <entry>
+        <key>statdown</key>
+        <value>nothing</value>
+    </entry>
+
 </defaultsMap>

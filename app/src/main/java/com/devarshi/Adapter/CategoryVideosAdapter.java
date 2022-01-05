@@ -1,12 +1,17 @@
 package com.devarshi.Adapter;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,6 +21,15 @@ import com.bumptech.glide.Glide;
 import com.devarshi.Retrofitclient.Template;
 import com.devarshi.buzoclone.R;
 import com.devarshi.buzoclone.VideoPlayer;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +62,7 @@ public class CategoryVideosAdapter extends RecyclerView.Adapter<CategoryVideosAd
 
         holder.hSVideoTextView.setText(dataForTempItems.get(position).getTitle());
 
-        if (dataForTempItems.get(position).getIsHot() && dataForTempItems.get(position).getIsNew()){
+        if (dataForTempItems.get(position).getIsHot() && dataForTempItems.get(position).getIsNew()) {
 
             holder.classifyCardView.setVisibility(View.VISIBLE);
 //                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);
@@ -57,8 +71,7 @@ public class CategoryVideosAdapter extends RecyclerView.Adapter<CategoryVideosAd
                 /*drawable.setColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
                 ((VideosHolder) holder).classifyCardView.setBackground(drawable);*/
             holder.classifyTextView.setText("HOT");
-        }
-        else if (dataForTempItems.get(position).getIsHot() && !dataForTempItems.get(position).getIsNew()){
+        } else if (dataForTempItems.get(position).getIsHot() && !dataForTempItems.get(position).getIsNew()) {
 
             holder.classifyCardView.setVisibility(View.VISIBLE);
 //                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);
@@ -67,8 +80,7 @@ public class CategoryVideosAdapter extends RecyclerView.Adapter<CategoryVideosAd
                 /*drawable.setColor(mContext.getResources().getColor(R.color.classifyCardViewColor));
                 ((VideosHolder) holder).classifyCardView.setBackground(drawable);*/
             holder.classifyTextView.setText("HOT");
-        }
-        else if (!dataForTempItems.get(position).getIsHot() && dataForTempItems.get(position).getIsNew()){
+        } else if (!dataForTempItems.get(position).getIsHot() && dataForTempItems.get(position).getIsNew()) {
 
             holder.classifyCardView.setVisibility(View.VISIBLE);
 //                ((VideosHolder) holder).classifyTextView.setVisibility(View.VISIBLE);

@@ -40,6 +40,16 @@
             app:layout_constraintStart_toEndOf="@+id/iVBack"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tVRcCatText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Sample Text"
+            app:layout_constraintEnd_toStartOf="@+id/iVSearch"
+            app:layout_constraintStart_toEndOf="@+id/tVCatName"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/iVSearch"
             android:layout_width="25dp"
