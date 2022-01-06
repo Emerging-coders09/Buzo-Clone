@@ -20,12 +20,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BuzoClone"
         android:usesCleartextTraffic="true"
-        android:windowSoftInputMode="stateHidden">
+        android:windowSoftInputMode="stateHidden"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".SearchVideoTitleResultActivity"
-            android:exported="false"/>
-        <activity android:name=".CategoryActivity" />
-        <activity android:name=".SearchActivity" />
+            android:exported="false"
+            android:hardwareAccelerated="false"/>
+        <activity android:name=".CategoryActivity"
+            android:hardwareAccelerated="true"/>
+        <activity android:name=".SearchActivity"
+            android:hardwareAccelerated="false"/>
         <!--
         <receiver android:name=".StatusSaverFragment$MyBroadCastReceiver"
             android:exported="true"
@@ -47,27 +51,33 @@
 
         <activity
             android:name=".StatusSaverActivity"
+            android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".StatusViewerActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".StatusDownloader"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".WhatsAppCardView"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:hardwareAccelerated="true"/>
         <activity
             android:name=".VideoPlayer"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

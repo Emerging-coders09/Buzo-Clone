@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +34,13 @@ import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.devarshi.Retrofitclient.Template;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -108,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String RCTEXT_VALUE = "test";
     private static final String RC_TEXT_LOADING_VALUE = "testloading";
+
+    NativeAd ad;
 //    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
@@ -157,6 +163,22 @@ public class MainActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        // TODO: 06/01/22 Exit Dialog Native Ad
+
+        AdLoader.Builder builder = new AdLoader.Builder(MainActivity.this, getString(R.string.nativead_ad_unit_id));
+
+        builder.forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+            @Override
+            public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+
+                ad = nativeAd;
+                Toast.makeText(MainActivity.this, "Ad Loaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AdLoader adLoader = builder.build();
+        adLoader.loadAd(new AdRequest.Builder().build());
 
         /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
@@ -837,12 +859,19 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(Gravity.LEFT);
             this.doubleBackToExitPressedOnce = false;
         } else if (this.doubleBackToExitPressedOnce) {
-            Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
+
+            ExitDialog exitDialog = new ExitDialog(MainActivity.this,this.ad);
+            exitDialog.show();
+
+            Window window = exitDialog.getWindow();
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     doubleBackToExitPressedOnce = false;
+
                 }
             }, 2000);
         }

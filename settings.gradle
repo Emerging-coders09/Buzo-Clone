@@ -1,2 +1,3 @@
 rootProject.name = "Buzo Clone"
 include ':app'
+include ':nativetemplates'

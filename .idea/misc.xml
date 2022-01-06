@@ -8,6 +8,7 @@
       <map>
         <entry key="app/src/main/res/layout-hdpi/activity_main.xml" value="0.15095628415300547" />
         <entry key="app/src/main/res/layout-mdpi/activity_main.xml" value="0.6424418604651163" />
+        <entry key="app/src/main/res/layout-mdpi/ad_unified.xml" value="0.2629781420765027" />
         <entry key="app/src/main/res/layout-xhdpi/activity_main.xml" value="0.4952956989247312" />
         <entry key="app/src/main/res/layout-xxhdpi/activity_main.xml" value="0.20018115942028986" />
         <entry key="app/src/main/res/layout-xxxhdpi/activity_main.xml" value="0.15095628415300547" />
@@ -15,12 +16,14 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.24726775956284153" />
         <entry key="app/src/main/res/layout/activity_search_video_title_result.xml" value="0.22404371584699453" />
-        <entry key="app/src/main/res/layout/activity_status_downloader.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_status_downloader.xml" value="0.8" />
         <entry key="app/src/main/res/layout/activity_status_saver.xml" value="0.1601775956284153" />
         <entry key="app/src/main/res/layout/activity_status_viewer.xml" value="0.1601775956284153" />
         <entry key="app/src/main/res/layout/activity_video_player.xml" value="0.1601775956284153" />
         <entry key="app/src/main/res/layout/activity_whats_app_card_view.xml" value="0.15812841530054644" />
+        <entry key="app/src/main/res/layout/ad_unified.xml" value="0.2629781420765027" />
         <entry key="app/src/main/res/layout/categories_recycler_view_layout.xml" value="0.2503415300546448" />
+        <entry key="app/src/main/res/layout/exit_dialog.xml" value="0.2629781420765027" />
         <entry key="app/src/main/res/layout/exo_playback_control_view_yt.xml" value="0.1601775956284153" />
         <entry key="app/src/main/res/layout/fragment_status_saver.xml" value="0.2503415300546448" />
         <entry key="app/src/main/res/layout/fragment_status_viewer.xml" value="0.2503415300546448" />

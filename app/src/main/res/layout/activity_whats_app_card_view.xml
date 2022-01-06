@@ -41,8 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -62,11 +61,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="WhatsApp Status Saver"
+                android:layout_margin="10dp"
                 android:fontFamily="sans-serif-smallcaps"
+                android:text="WhatsApp Status Saver"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp">
+                android:textStyle="bold">
 
             </TextView>
 
@@ -95,8 +94,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -108,11 +106,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Insta Downloader"
+                android:layout_margin="10dp"
                 android:fontFamily="sans-serif-smallcaps"
+                android:text="Insta Downloader"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp">
+                android:textStyle="bold">
 
             </TextView>
 
@@ -175,8 +173,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -188,11 +185,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quote Tools"
+                android:layout_margin="10dp"
                 android:fontFamily="sans-serif-smallcaps"
+                android:text="Quote Tools"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp">
+                android:textStyle="bold">
 
             </TextView>
 
@@ -257,22 +254,32 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Test Crash"/>
+        android:text="Test Crash"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tVWacv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loading"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="Loading"
+        android:visibility="gone" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <!--<com.google.android.ads.nativetemplates.TemplateView
+        android:id="@+id/my_template"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:gnt_template_type="@layout/gnt_small_template_view" />-->
+
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/ad_view_container"
+            android:id="@+id/fl_adplaceholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -282,6 +289,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </LinearLayout>

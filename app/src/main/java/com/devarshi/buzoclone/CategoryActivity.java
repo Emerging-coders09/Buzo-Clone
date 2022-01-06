@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -67,10 +68,18 @@ public class CategoryActivity extends AppCompatActivity {
     private static final String CAT_KEY = "catkey";
     private static final String RC_TEXT = "test";
 
+    // TODO: 06/01/22
+
+    ConstraintLayout catActivityCl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
+
+        catActivityCl = findViewById(R.id.cLCatActivity);
+
+        catActivityCl.setBackgroundColor(getResources().getColor(R.color.white));
 
         // TODO: 05/01/22 Firebase remote config starts
         rCCatTextTv = findViewById(R.id.tVRcCatText);

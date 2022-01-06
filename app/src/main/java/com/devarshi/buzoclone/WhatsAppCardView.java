@@ -84,6 +84,21 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         loadAd();
 
+        /*AdLoader.Builder builder = new AdLoader.Builder(this,getString(R.string.nativead_ad_unit_id));
+        builder.forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+            @Override
+            public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+
+                TemplateView templateView = findViewById(R.id.my_template);
+                templateView.setNativeAd(nativeAd);
+
+            }
+        });
+
+        AdLoader adLoader = builder.build();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adLoader.loadAd(adRequest);*/
+
         wacvTv = findViewById(R.id.tVWacv);
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -112,6 +127,8 @@ public class WhatsAppCardView extends AppCompatActivity {
                         displayWelcomeMessage();
                     }
                 });
+
+        // TODO: 06/01/22 Native Ad
 
         /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
