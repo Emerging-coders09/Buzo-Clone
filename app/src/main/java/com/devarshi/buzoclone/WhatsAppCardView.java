@@ -8,9 +8,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devarshi.Adapter.StatusCardViewAdapter;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
@@ -32,6 +37,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -46,7 +52,7 @@ public class WhatsAppCardView extends AppCompatActivity {
 
     TextView textViewSeeAll;
     public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
-    ImageView backImageView;
+    ImageView backImageView, i1ImageView;
     String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT <= 30 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
 //    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 30 ? "WhatsApp/Media/.Statuses" : "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
@@ -56,8 +62,8 @@ public class WhatsAppCardView extends AppCompatActivity {
 
     TextView wacvTv;
 
-    /*private FrameLayout adContainerView;
-    private AdView adView;*/
+    private FrameLayout adContainerView;
+    private AdView adView;
 
     private static final String WACV_TV = "wacvTv";
     private static final String RCTEXT_VALUE_2 = "test2";
@@ -66,6 +72,9 @@ public class WhatsAppCardView extends AppCompatActivity {
 
     private InterstitialAd interstitialAd;
     private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
+
+    NativeAd ad;
+//    private RewardedInterstitialAd rewardedInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,17 +139,17 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         // TODO: 06/01/22 Native Ad
 
-        /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) { }
         });
 
-        adContainerView = findViewById(R.id.ad_view_container);
+        adContainerView = findViewById(R.id.fl_adplaceholder);
 
         adView = new AdView(this);
         adView.setAdUnitId(getString(R.string.adaptive_banner_ad_unit_id));
         adContainerView.addView(adView);
-        loadBanner();*/
+        loadBanner();
 
         textViewSeeAll = findViewById(R.id.seeAllTextView);
         statusRecyclerView = findViewById(R.id.recyclerViewStatus);
@@ -178,7 +187,57 @@ public class WhatsAppCardView extends AppCompatActivity {
             }
             showInterstitial();
         });
+
+        i1ImageView = findViewById(R.id.imageViewI1);
+        i1ImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RatingActivity ratingActivity = new RatingActivity(WhatsAppCardView.this,ad);
+                ratingActivity.show();
+            }
+        });
+
+        // TODO: 07/01/22 Rewared Ad
+
+        /*rewardedInterstitialAd.show(*//* Activity *//* WhatsAppCardView.this,*//*
+    OnUserEarnedRewardListener *//* WhatsAppCardView.this);*/
+
     }
+
+    /*public void loadRewardedInterstitialAd() {
+        // Use the test ad unit ID to load an ad.
+        RewardedInterstitialAd.load(WhatsAppCardView.this, "ca-app-pub-3940256099942544/5354046379",
+                new AdRequest.Builder().build(),  new RewardedInterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(RewardedInterstitialAd ad) {
+                        rewardedInterstitialAd = ad;
+                        rewardedInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            *//** Called when the ad failed to show full screen content. *//*
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                Log.i(TAG, "onAdFailedToShowFullScreenContent");
+                            }
+
+                            *//** Called when ad showed the full screen content. *//*
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                Log.i(TAG, "onAdShowedFullScreenContent");
+                            }
+
+                            *//** Called when full screen content is dismissed. *//*
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                Log.i(TAG, "onAdDismissedFullScreenContent");
+                            }
+                        });
+                        Log.e(TAG, "onAdLoaded");
+                    }
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError loadAdError) {
+                        Log.e(TAG, "onAdFailedToLoad");
+                    }
+                });
+    }*/
 
     public void loadAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -255,7 +314,7 @@ public class WhatsAppCardView extends AppCompatActivity {
         }
     }
 
-    /*private void loadBanner() {
+    private void loadBanner() {
         // Create an ad request. Check your logcat output for the hashed device ID
         // to get test ads on a physical device, e.g.,
         // "Use AdRequest.Builder.addTestDevice("ABCDE0123") to get test ads on this
@@ -285,7 +344,7 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         // Step 3 - Get adaptive ad size and return for setting on the ad view.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
-    }*/
+    }
 
     private void displayWelcomeMessage() {
         // [START get_config_values]
@@ -315,4 +374,9 @@ public class WhatsAppCardView extends AppCompatActivity {
         }
         return inFiles;
     }
+
+    /*@Override
+    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+        Log.i(TAG, "onUserEarnedReward");
+    }*/
 }

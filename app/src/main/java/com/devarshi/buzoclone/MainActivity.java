@@ -2,6 +2,7 @@ package com.devarshi.buzoclone;
 
 import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,13 +36,16 @@ import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.devarshi.Retrofitclient.Template;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -51,12 +56,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnUserEarnedRewardListener {
 
     //    RecyclerView recyclerViewCategories;
     RecyclerView recyclerViewVideos;
@@ -114,7 +121,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String RC_TEXT_LOADING_VALUE = "testloading";
 
     NativeAd ad;
-//    boolean isScrolling = false;
+    ExitDialog exitDialog;
+    private RewardedInterstitialAd rewardedInterstitialAd;
+    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/5354046379";
+    boolean isLoadingAds;
+    //    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
 
@@ -154,11 +165,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        List<String> testDeviceIds = Arrays.asList("33BE2250B43518CCDA7DE426D04EE231");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
+        /*RequestConfiguration conf= new RequestConfiguration.Builder()
+                .setMaxAdContentRating(
+                        MAX_AD_CONTENT_RATING_T)
+                .build();
+
+        MobileAds.setRequestConfiguration(conf);*/
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
+//                loadRewardedInterstitialAd();
+
             }
         });
+
+        // TODO: 07/01/22 Rewared Ad
+
+        rewardedInterstitialAd.show(/* Activity */ MainActivity.this,/*
+    OnUserEarnedRewardListener */ MainActivity.this);
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -166,7 +195,23 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: 06/01/22 Exit Dialog Native Ad
 
-        AdLoader.Builder builder = new AdLoader.Builder(MainActivity.this, getString(R.string.nativead_ad_unit_id));
+        // TODO: 07/01/22 Native Video Ad
+
+        /*AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                    @Override
+                    public void onNativeAdLoaded(NativeAd nativeAd) {
+
+                        ad = nativeAd;
+                        Toast.makeText(MainActivity.this, "Ad loaded", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .build();
+
+        adLoader.loadAd(new AdRequest.Builder().build());*/
+
+
+        /*AdLoader.Builder builder = new AdLoader.Builder(MainActivity.this, getString(R.string.nativead_ad_unit_id));
 
         builder.forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
             @Override
@@ -175,13 +220,12 @@ public class MainActivity extends AppCompatActivity {
                 ad = nativeAd;
                 Toast.makeText(MainActivity.this, "Ad Loaded", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
-        AdLoader adLoader = builder.build();
-        adLoader.loadAd(new AdRequest.Builder().build());
+//        AdLoader adLoader = builder.build();
 
-        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
 //        recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
@@ -682,7 +726,50 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+//        startGame();
     }
+
+    /*public void loadRewardedInterstitialAd() {
+        // Use the test ad unit ID to load an ad.
+        if (rewardedInterstitialAd == null) {
+            isLoadingAds = true;
+            AdRequest adRequest = new AdRequest.Builder().build();
+
+            RewardedInterstitialAd.load(
+                    MainActivity.this,
+                    AD_UNIT_ID,
+                    adRequest,
+                    new RewardedInterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(RewardedInterstitialAd ad) {
+                            Log.d(TAG, "onAdLoaded");
+
+                            rewardedInterstitialAd = ad;
+                            isLoadingAds = false;
+                            Toast.makeText(MainActivity.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(LoadAdError loadAdError) {
+                            Log.d(TAG, "onAdFailedToLoad: " + loadAdError.getMessage());
+
+                            // Handle the error.
+                            rewardedInterstitialAd = null;
+                            isLoadingAds = false;
+                            Toast.makeText(MainActivity.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }
+
+    }
+
+    public void startGame(){
+        if (rewardedInterstitialAd != null && !isLoadingAds){
+            loadRewardedInterstitialAd();
+        }
+    }*/
 
 
     private void displayWelcomeMessage() {
@@ -861,11 +948,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (this.doubleBackToExitPressedOnce) {
 //            Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
 
-            ExitDialog exitDialog = new ExitDialog(MainActivity.this,this.ad);
+            exitDialog = new ExitDialog(MainActivity.this, this.ad);
             exitDialog.show();
 
             Window window = exitDialog.getWindow();
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -897,5 +984,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });*/
+    }
+
+    @Override
+    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+        Log.i(ContentValues.TAG, "onUserEarnedReward");
     }
 }
