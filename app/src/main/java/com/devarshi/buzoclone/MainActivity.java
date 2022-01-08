@@ -2,13 +2,16 @@ package com.devarshi.buzoclone;
 
 import static com.google.android.exoplayer2.mediacodec.MediaCodecInfo.TAG;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,8 +39,12 @@ import com.devarshi.Retrofitclient.Example;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.devarshi.Retrofitclient.Template;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
@@ -45,7 +52,10 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -122,9 +132,23 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 
     NativeAd ad;
     ExitDialog exitDialog;
+
+    // TODO: 08/01/22 Rewarded Ad (working code)
+
+    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917";
+    private RewardedAd rewardedAd;
+    boolean isLoading;
+
+    // TODO: 08/01/22 Rewarded Interstitial Ad
+
+    private static final String ADV_UNIT_ID = "ca-app-pub-3940256099942544/5354046379";
     private RewardedInterstitialAd rewardedInterstitialAd;
-    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/5354046379";
     boolean isLoadingAds;
+
+
+    /*private RewardedInterstitialAd rewardedInterstitialAd;
+    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/5354046379";*/
+//    boolean isLoadingAds;
     //    boolean isScrolling = false;
 
 //    VideosAdapter videosAdapter;
@@ -134,6 +158,28 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // TODO: 08/01/22 Rewarded Interstitial Ad
+
+        MobileAds.initialize(
+                this,
+                new OnInitializationCompleteListener() {
+                    @Override
+                    public void onInitializationComplete(InitializationStatus initializationStatus) {
+                        loadRewardedInterstitialAd();
+                    }
+                });
+
+        // TODO: 08/01/22 Rewarded Ad (working code)
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        loadRewardedAd();
 
         rCTextTv = findViewById(R.id.tVRcText);
 //        rCTextTv.setText("Devarshi");
@@ -186,11 +232,16 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 
         // TODO: 07/01/22 Rewared Ad
 
-        rewardedInterstitialAd.show(/* Activity */ MainActivity.this,/*
-    OnUserEarnedRewardListener */ MainActivity.this);
+
+        /*rewardedInterstitialAd.show(*//* Activity *//* MainActivity.this,*//*
+    OnUserEarnedRewardListener *//* MainActivity.this);*/
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
+
+        /*AdSize adSize = getAdSize();
+        mAdView.setAdSize(adSize);*/
+
         mAdView.loadAd(adRequest);
 
         // TODO: 06/01/22 Exit Dialog Native Ad
@@ -241,14 +292,21 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 
         searchCardView = findViewById(R.id.cardViewSearch);
 
+        // TODO: 08/01/22 Rewarded Ad (working code)
+
         searchCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showRewardedVideo();
                 intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_top, 0);
             }
         });
+
+        // TODO: 08/01/22 Rewarded Ad (working code)
+        startGame();
+
 
 //        nScrollView = findViewById(R.id.nestedScrollView);
 
@@ -668,37 +726,37 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                 switch (item.getItemId()) {
 
                     case R.id.videos:
-                        Toast.makeText(getApplicationContext(), "Videos is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Videos is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.favourites:
-                        Toast.makeText(getApplicationContext(), "Favourites is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Favourites is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.sound:
-                        Toast.makeText(getApplicationContext(), "Sound is opened", Toast.LENGTH_LONG).show();
-                        drawerLayout.closeDrawer(GravityCompat.START);
+                        Toast.makeText(MainActivity.this, "Sound is opened", Toast.LENGTH_LONG).show();
+//                        drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.share:
-                        Toast.makeText(getApplicationContext(), "Share app is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Share app is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.rate:
-                        Toast.makeText(getApplicationContext(), "Rate app is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Rate app is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     case R.id.privacy:
-                        Toast.makeText(getApplicationContext(), "Privacy policy is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Privacy policy is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
 
                     default:
-                        Toast.makeText(getApplicationContext(), "Nothing is opened", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Nothing is opened", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                 }
@@ -719,16 +777,241 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
             }
         });
 
+
+        // TODO: 08/01/22 Rewarded Interstitial Ad
         whatsAppCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showRewardedVideoRi();
                 intent = new Intent(MainActivity.this, WhatsAppCardView.class);
                 startActivity(intent);
             }
         });
 
+        startGameRi();
+
 //        startGame();
     }
+
+
+    // TODO: 08/01/22 For Adaptive Banner
+    private AdSize getAdSize() {
+        // Step 2 - Determine the screen width (less decorations) to use for the ad width.
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+
+        int adWidth = (int) (widthPixels / density);
+
+        // Step 3 - Get adaptive ad size and return for setting on the ad view.
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
+    }
+
+    // TODO: 08/01/22 Rewarded Interstitial Ad
+
+    private void loadRewardedInterstitialAd() {
+        if (rewardedInterstitialAd == null) {
+            isLoadingAds = true;
+
+            AdRequest adRequest = new AdRequest.Builder().build();
+            // Use the test ad unit ID to load an ad.
+            RewardedInterstitialAd.load(
+                    MainActivity.this,
+                    ADV_UNIT_ID,
+                    adRequest,
+                    new RewardedInterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(RewardedInterstitialAd ad) {
+                            Log.d(TAG, "onAdLoaded");
+
+                            rewardedInterstitialAd = ad;
+                            isLoadingAds = false;
+                            Toast.makeText(MainActivity.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(LoadAdError loadAdError) {
+                            Log.d(TAG, "onAdFailedToLoad: " + loadAdError.getMessage());
+
+                            // Handle the error.
+                            rewardedInterstitialAd = null;
+                            isLoadingAds = false;
+                            Toast.makeText(MainActivity.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void startGameRi() {
+        if (rewardedInterstitialAd != null && !isLoadingAds) {
+            loadRewardedInterstitialAd();
+        }
+    }
+
+    private void showRewardedVideoRi() {
+
+        if (rewardedInterstitialAd == null) {
+            Log.d(TAG, "The rewarded interstitial ad wasn't ready yet.");
+            return;
+        }
+
+        rewardedInterstitialAd.setFullScreenContentCallback(
+                new FullScreenContentCallback() {
+                    /** Called when ad showed the full screen content. */
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        Log.d(TAG, "onAdShowedFullScreenContent");
+
+                        Toast.makeText(MainActivity.this, "onAdShowedFullScreenContentRi", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    /** Called when the ad failed to show full screen content. */
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        Log.d(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
+
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedInterstitialAd = null;
+                        loadRewardedInterstitialAd();
+
+                        Toast.makeText(
+                                MainActivity.this, "onAdFailedToShowFullScreenContentRi", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    /** Called when full screen content is dismissed. */
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedInterstitialAd = null;
+                        Log.d(TAG, "onAdDismissedFullScreenContent");
+                        Toast.makeText(MainActivity.this, "onAdDismissedFullScreenContentRi", Toast.LENGTH_SHORT)
+                                .show();
+                        // Preload the next rewarded interstitial ad.
+                        loadRewardedInterstitialAd();
+                    }
+                });
+
+        Activity activityContext = MainActivity.this;
+        rewardedInterstitialAd.show(
+                activityContext,
+                new OnUserEarnedRewardListener() {
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                        // Handle the reward.
+                        Log.d(TAG, "The user earned the reward.");
+//                        addCoins(rewardItem.getAmount());
+                    }
+                });
+    }
+
+    // TODO: 08/01/22 Rewarded Ad (working code)
+
+    private void loadRewardedAd() {
+        if (rewardedAd == null) {
+            isLoading = true;
+            AdRequest adRequest = new AdRequest.Builder().build();
+            RewardedAd.load(
+                    this,
+                    AD_UNIT_ID,
+                    adRequest,
+                    new RewardedAdLoadCallback() {
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error.
+                            Log.d(TAG, loadAdError.getMessage());
+                            rewardedAd = null;
+                            MainActivity.this.isLoading = false;
+                            Toast.makeText(MainActivity.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                            MainActivity.this.rewardedAd = rewardedAd;
+                            Log.d(TAG, "onAdLoaded");
+                            MainActivity.this.isLoading = false;
+                            Toast.makeText(MainActivity.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    // TODO: 08/01/22 Rewarded Ad (working code)
+
+    private void startGame() {
+
+        if (rewardedAd != null && !isLoading) {
+            loadRewardedAd();
+        }
+    }
+    // TODO: 08/01/22 Rewarded Ad (working code)
+
+    private void showRewardedVideo() {
+
+        if (rewardedAd == null) {
+            Log.d("TAG", "The rewarded ad wasn't ready yet.");
+            return;
+        }
+//        showVideoButton.setVisibility(View.INVISIBLE);
+
+        rewardedAd.setFullScreenContentCallback(
+                new FullScreenContentCallback() {
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        // Called when ad is shown.
+                        Log.d(TAG, "onAdShowedFullScreenContent");
+                        Toast.makeText(MainActivity.this, "onAdShowedFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        // Called when ad fails to show.
+                        Log.d(TAG, "onAdFailedToShowFullScreenContent");
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedAd = null;
+                        Toast.makeText(
+                                MainActivity.this, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        // Called when ad is dismissed.
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedAd = null;
+                        Log.d(TAG, "onAdDismissedFullScreenContent");
+                        Toast.makeText(MainActivity.this, "onAdDismissedFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                        // Preload the next rewarded ad.
+                        MainActivity.this.loadRewardedAd();
+                    }
+                });
+        Activity activityContext = MainActivity.this;
+        rewardedAd.show(
+                activityContext,
+                new OnUserEarnedRewardListener() {
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                        // Handle the reward.
+                        Log.d("TAG", "The user earned the reward.");
+                        int rewardAmount = rewardItem.getAmount();
+                        String rewardType = rewardItem.getType();
+
+                        Log.d(TAG, "onUserEarnedReward: Reward is : " + rewardAmount);
+
+                    }
+                });
+    }
+
 
     /*public void loadRewardedInterstitialAd() {
         // Use the test ad unit ID to load an ad.

@@ -85,4 +85,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
+    compile 'com.google.firebase:firebase-ads:10.2.4'
+
 }

@@ -77,7 +77,8 @@ public class VideoPlayer extends AppCompatActivity {
                 }
 
                 if (playbackState == Player.STATE_ENDED){
-                    player.play();
+                    player.seekTo(0);
+                    player.setPlayWhenReady(true);
                 }
             }
         });
@@ -90,8 +91,6 @@ public class VideoPlayer extends AppCompatActivity {
                     onPause();
                     imageViewPlay.setVisibility(View.VISIBLE);
                     isPlaying = false;
-
-
                 }
                 else {
                     imageViewPlay.setVisibility(View.GONE);

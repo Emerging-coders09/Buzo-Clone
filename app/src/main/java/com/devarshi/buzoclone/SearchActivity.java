@@ -52,14 +52,39 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
     boolean searchApiCalling = false;
 
+
+    // TODO: 08/01/22 Rewarded Ad (self)
+    /*private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917";
+    public RewardedAd rewardedAd;
+    boolean isLoading;*/
+
+
 //    int currentItems, scrolledOutItems, totalItems;
 
 //    int page = 0;
+
+    ConstraintLayout cLSearchActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        cLSearchActivity = findViewById(R.id.searchActivityCl);
+
+        cLSearchActivity.setBackground(getDrawable(R.color.white));
+
+        // TODO: 08/01/22 Rewarded Ad (self)
+        /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        loadRewardedAd();*/
+
+        // TODO: 08/01/22 Rewarded Ad Google guided lab
+
 
         backToHomeImageView = findViewById(R.id.iVBackToHome);
 
@@ -91,7 +116,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
         LinearLayoutManager lLmForFilteredVideos = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         filteredVideosRv.setLayoutManager(lLmForFilteredVideos);
 
-        filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos,listOfVidsItems,this,SearchActivity.this);
+        filteredVideosAdapter = new FilteredVideosAdapter(listOfFilteredVideos, listOfVidsItems, this, SearchActivity.this);
         filteredVideosRv.setAdapter(filteredVideosAdapter);
 
 //        searchEt.requestFocus();
@@ -124,16 +149,39 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
-
                     filter(newText);
 
+
                 }
+
 
 //                listOfFilteredVideos.clear();
 
                 return false;
             }
         });
+
+
+//        startGame();
+
+        // TODO: 08/01/22 Rewarded Ad (self)
+//        showRewardedVideo();
+
+
+        /*if (rewardedAd != null) {
+            Activity activityContext = SearchActivity.this;
+            rewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    Log.d(TAG, "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                }
+            });
+        } else {
+            Log.d(TAG, "The rewarded ad wasn't ready yet.");
+        }*/
 
         /*searchEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -167,6 +215,116 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
         });*/
     }
+
+
+    // TODO: 08/01/22 Rewarded Ad (self)
+    /*private void loadRewardedAd() {
+        if (rewardedAd == null) {
+            isLoading = true;
+            AdRequest adRequest = new AdRequest.Builder().build();
+            RewardedAd.load(
+                    this,
+                    AD_UNIT_ID,
+                    adRequest,
+                    new RewardedAdLoadCallback() {
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error.
+                            Log.d(TAG, loadAdError.getMessage());
+                            rewardedAd = null;
+                            SearchActivity.this.isLoading = false;
+                            Toast.makeText(SearchActivity.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                            SearchActivity.this.rewardedAd = rewardedAd;
+                            Log.d(TAG, "onAdLoaded");
+                            SearchActivity.this.isLoading = false;
+                            Toast.makeText(SearchActivity.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent();
+                }
+
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                }
+            });
+        }
+    }
+
+    private void startGame() {
+
+        if (rewardedAd != null && !isLoading) {
+            loadRewardedAd();
+        }
+    }
+
+    private void showRewardedVideo() {
+
+        if (rewardedAd == null) {
+            Log.d("TAG", "The rewarded ad wasn't ready yet.");
+            return;
+        }
+        rewardedAd.setFullScreenContentCallback(
+                new FullScreenContentCallback() {
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        // Called when ad is shown.
+                        Log.d(TAG, "onAdShowedFullScreenContent");
+                        Toast.makeText(SearchActivity.this, "onAdShowedFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        // Called when ad fails to show.
+                        Log.d(TAG, "onAdFailedToShowFullScreenContent");
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedAd = null;
+                        Toast.makeText(
+                                SearchActivity.this, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        // Called when ad is dismissed.
+                        // Don't forget to set the ad reference to null so you
+                        // don't show the ad a second time.
+                        rewardedAd = null;
+                        Log.d(TAG, "onAdDismissedFullScreenContent");
+                        Toast.makeText(SearchActivity.this, "onAdDismissedFullScreenContent", Toast.LENGTH_SHORT)
+                                .show();
+                        // Preload the next rewarded ad.
+                        SearchActivity.this.loadRewardedAd();
+                    }
+                });
+        Activity activityContext = SearchActivity.this;
+        rewardedAd.show(
+                activityContext,
+                new OnUserEarnedRewardListener() {
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                        // Handle the reward.
+                        Log.d("TAG", "The user earned the reward.");
+                        int rewardAmount = rewardItem.getAmount();
+                        String rewardType = rewardItem.getType();
+                    }
+                });
+    }*/
 
     public void filter(String s) {
 
