@@ -52,7 +52,7 @@ public class WhatsAppCardView extends AppCompatActivity {
 
     TextView textViewSeeAll;
     public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
-    ImageView backImageView, i1ImageView;
+    ImageView backImageView, i1ImageView, i2ImageView;
     String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 28 ? "/WhatsApp/Media/.Statuses" : (Build.VERSION.SDK_INT <= 30 ? "/Android/media/com.whatsapp/WhatsApp/Media/.Statuses" : "/WhatsApp/Media/.Statuses");
 //    String WHATSAPP_STATUSES_LOCATION = Build.VERSION.SDK_INT <= 30 ? "WhatsApp/Media/.Statuses" : "Android/media/com.whatsapp/WhatsApp/Media/.Statuses";
 
@@ -201,6 +201,17 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         /*rewardedInterstitialAd.show(*//* Activity *//* WhatsAppCardView.this,*//*
     OnUserEarnedRewardListener *//* WhatsAppCardView.this);*/
+
+        // TODO: 10/01/22 Firebase DB retrieval
+
+        i2ImageView = findViewById(R.id.imageViewI2);
+        i2ImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WhatsAppCardView.this,BookGenreActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
