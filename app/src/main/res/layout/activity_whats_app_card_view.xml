@@ -254,8 +254,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Test Crash"
-        android:visibility="gone" />
+        android:text="Test Crash" />
 
     <TextView
         android:id="@+id/tVWacv"

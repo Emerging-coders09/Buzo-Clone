@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout-xhdpi/activity_main.xml" value="0.4952956989247312" />
         <entry key="app/src/main/res/layout-xxhdpi/activity_main.xml" value="0.20018115942028986" />
         <entry key="app/src/main/res/layout-xxxhdpi/activity_main.xml" value="0.15095628415300547" />
+        <entry key="app/src/main/res/layout/activity_actor_name.xml" value="0.24180327868852458" />
         <entry key="app/src/main/res/layout/activity_book_genre.xml" value="0.2462431693989071" />
         <entry key="app/src/main/res/layout/activity_category.xml" value="0.22404371584699453" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
@@ -29,8 +30,10 @@
         <entry key="app/src/main/res/layout/fragment_status_saver.xml" value="0.2503415300546448" />
         <entry key="app/src/main/res/layout/fragment_status_viewer.xml" value="0.2503415300546448" />
         <entry key="app/src/main/res/layout/home_screen_video_layout.xml" value="0.22404371584699453" />
+        <entry key="app/src/main/res/layout/layout_for_actor_name_list.xml" value="0.24180327868852458" />
         <entry key="app/src/main/res/layout/layout_for_book_genre_list.xml" value="0.2462431693989071" />
         <entry key="app/src/main/res/layout/layout_for_categories.xml" value="0.2503415300546448" />
+        <entry key="app/src/main/res/layout/notification.xml" value="0.24180327868852458" />
         <entry key="app/src/main/res/layout/rate_app_layout_file.xml" value="0.258879781420765" />
         <entry key="app/src/main/res/layout/search_bar_filtered_list_item.xml" value="0.24726775956284153" />
         <entry key="app/src/main/res/layout/search_categories_row_item.xml" value="0.24282786885245902" />
@@ -38,6 +41,7 @@
         <entry key="app/src/main/res/layout/status_video_on_click_viewer.xml" value="0.20018115942028986" />
         <entry key="app/src/main/res/menu/iconmenu.xml" value="0.266015625" />
         <entry key="nativetemplates/src/main/res/layout/gnt_medium_template_view.xml" value="0.258879781420765" />
+        <entry key="nativetemplates/src/main/res/layout/gnt_small_template_view.xml" value="0.24180327868852458" />
       </map>
     </option>
   </component>

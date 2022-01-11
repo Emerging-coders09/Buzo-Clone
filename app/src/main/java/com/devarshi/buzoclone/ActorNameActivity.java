@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devarshi.Adapter.BookGenreAdapter;
+import com.devarshi.Adapter.ActorNameAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,28 +19,28 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class BookGenreActivity extends AppCompatActivity {
+public class ActorNameActivity extends AppCompatActivity {
 
     DatabaseReference databaseReference;
 
-    BookGenreAdapter bookGenreAdapter;
-    RecyclerView bookGenresRv;
+    ActorNameAdapter actorNameAdapter;
+    RecyclerView actorNameRv;
 
-    ArrayList<String> listOfBookGenre = new ArrayList<>();
+    ArrayList<String> listOfActorName = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_genre);
+        setContentView(R.layout.activity_actor_name);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Book Genres");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Actors");
 
         Log.d(TAG, "onCreate: " + databaseReference);
 
-        bookGenresRv = findViewById(R.id.rvBookGenres);
+        actorNameRv = findViewById(R.id.rVActorName);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        bookGenresRv.setLayoutManager(linearLayoutManager);
+        actorNameRv.setLayoutManager(linearLayoutManager);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -50,11 +50,11 @@ public class BookGenreActivity extends AppCompatActivity {
 
                 /*for (DataSnapshot s : snapshot.getChildren()){
                     String value = s.getValue(BookGenre.class).getGenreName();
-                    listOfBookGenre.add(value);
+                    listOfActorName.add(value);
                 }*/
                 for (DataSnapshot s : snapshot.getChildren()){
                     String value = String.valueOf(s.getValue());
-                    listOfBookGenre.add(value);
+                    listOfActorName.add(value);
                 }
 
                 /*JSONObject jsonObject = new JSONObject((Map) snapshot);
@@ -66,9 +66,9 @@ public class BookGenreActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }*/
-                Log.d(TAG, "onDataChange: snapdetail " + listOfBookGenre);
-                bookGenreAdapter = new BookGenreAdapter(listOfBookGenre);
-                bookGenresRv.setAdapter(bookGenreAdapter);
+                Log.d(TAG, "onDataChange: snapdetail " + listOfActorName);
+                actorNameAdapter = new ActorNameAdapter(listOfActorName);
+                actorNameRv.setAdapter(actorNameAdapter);
             }
 
             @Override

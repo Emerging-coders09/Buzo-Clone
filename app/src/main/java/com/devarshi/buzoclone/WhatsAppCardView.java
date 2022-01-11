@@ -40,6 +40,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -72,6 +73,8 @@ public class WhatsAppCardView extends AppCompatActivity {
 
     private InterstitialAd interstitialAd;
     private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
+
+    int a,b,c;
 
     NativeAd ad;
 //    private RewardedInterstitialAd rewardedInterstitialAd;
@@ -141,7 +144,8 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) { }
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
         });
 
         adContainerView = findViewById(R.id.fl_adplaceholder);
@@ -165,12 +169,20 @@ public class WhatsAppCardView extends AppCompatActivity {
 
         testCrashButton = findViewById(R.id.bTTestCrash);
 
-        testCrashButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                throw new RuntimeException("Test Crash");
-            }
-        });
+        try {
+            testCrashButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    a = 1;
+                    b = 0;
+                    c = a/b;
+                    Log.d(TAG, "onClick: result: " + c);
+                }
+            });
+        } catch (ArithmeticException e) {
+            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+            crashlytics.setCustomKey("value",c);
+        }
 
         statusRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -192,7 +204,7 @@ public class WhatsAppCardView extends AppCompatActivity {
         i1ImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RatingActivity ratingActivity = new RatingActivity(WhatsAppCardView.this,ad);
+                RatingActivity ratingActivity = new RatingActivity(WhatsAppCardView.this, ad);
                 ratingActivity.show();
             }
         });
@@ -208,7 +220,7 @@ public class WhatsAppCardView extends AppCompatActivity {
         i2ImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WhatsAppCardView.this,BookGenreActivity.class);
+                Intent intent = new Intent(WhatsAppCardView.this, ActorNameActivity.class);
                 startActivity(intent);
             }
         });
@@ -235,7 +247,11 @@ public class WhatsAppCardView extends AppCompatActivity {
                                 Log.i(TAG, "onAdShowedFullScreenContent");
                             }
 
-                            *//** Called when full screen content is dismissed. *//*
+                            */
+
+    /**
+     * Called when full screen content is dismissed.
+     *//*
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 Log.i(TAG, "onAdDismissedFullScreenContent");
@@ -249,7 +265,6 @@ public class WhatsAppCardView extends AppCompatActivity {
                     }
                 });
     }*/
-
     public void loadAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
         InterstitialAd.load(
@@ -318,6 +333,7 @@ public class WhatsAppCardView extends AppCompatActivity {
             startGame();
         }
     }
+
     private void startGame() {
         // Request a new ad if one isn't already loaded, hide the button, and kick off the timer.
         if (interstitialAd == null) {

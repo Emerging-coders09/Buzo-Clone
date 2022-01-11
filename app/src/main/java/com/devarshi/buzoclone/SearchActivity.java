@@ -23,8 +23,8 @@ import com.devarshi.Retrofitclient.ExampleTitleList;
 import com.devarshi.Retrofitclient.RetrofitRequestApi;
 import com.devarshi.Retrofitclient.Retrofitclient;
 import com.devarshi.Retrofitclient.Template;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -150,8 +150,6 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
                     catsConstraintLayout.setVisibility(View.GONE);
                     videoTitleListCL.setVisibility(View.VISIBLE);
                     filter(newText);
-
-
                 }
 
 
@@ -339,9 +337,9 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.F
 
         listOfFilteredVideos = gson.fromJson(json, type);
 
-        /*if (listOfFilteredVideos == null){
+        if (listOfFilteredVideos == null){
             listOfFilteredVideos = new ArrayList<>();
-        }*/
+        }
         for (String fd : listOfFilteredVideos) {
             if (fd.toLowerCase(Locale.getDefault()).contains(s.toLowerCase(Locale.getDefault()))) {
                 temp.add(fd);

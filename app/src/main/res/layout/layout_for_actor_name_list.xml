@@ -7,8 +7,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Genre Name: "
-        android:textSize="18sp"
+        android:text="Actor Name: "
+        android:textSize="17sp"
         android:fontFamily="@font/ptserifregular"
         android:letterSpacing="0.1"
         android:layout_margin="10dp"/>
@@ -17,9 +17,9 @@
         android:id="@+id/tVGenreName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sample Genre"
+        android:text="Sample Name"
         android:fontFamily="@font/ptserifregular"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:letterSpacing="0.1"
         android:layout_marginTop="10dp"/>
 
