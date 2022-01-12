@@ -27,4 +27,7 @@
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
+
 </resources>
