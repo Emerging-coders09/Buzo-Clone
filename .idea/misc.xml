@@ -6,6 +6,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/selector_row.xml" value="0.277734375" />
         <entry key="app/src/main/res/layout-hdpi/activity_main.xml" value="0.15095628415300547" />
         <entry key="app/src/main/res/layout-mdpi/activity_main.xml" value="0.6424418604651163" />
         <entry key="app/src/main/res/layout-mdpi/ad_unified.xml" value="0.2629781420765027" />

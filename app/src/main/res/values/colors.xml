@@ -17,6 +17,11 @@
 
     <color name="classifyCardViewColor">#E24444</color>
 
-    <color name="colorAccent">#FFA000</color>
+<!--    <color name="colorAccent">#FFA000</color>-->
+
+    <color name="colorPrimaryLight">#07C4AF</color>
+    <color name="colorPrimary">#035F56</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
 
 </resources>
